@@ -351,6 +351,133 @@ import Layout from '../layouts/BlogPost.astro';
         }
     };
 
+    function generateBattleMap(environment, monsters) {
+        const canvas = document.getElementById('battleMap');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        const gridSize = 10;
+        const cellSize = 30;
+        
+        // Clear canvas with dark background
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid
+        ctx.strokeStyle = '#404040';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i <= gridSize; i++) {
+            const pos = i * cellSize;
+            ctx.beginPath();
+            ctx.moveTo(pos, 0);
+            ctx.lineTo(pos, canvas.height);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, pos);
+            ctx.lineTo(canvas.width, pos);
+            ctx.stroke();
+        }
+        
+        // Define terrain symbols for each environment
+        const terrainMap = {
+            forest: ['🌲', '🌿', '🍄'],
+            dungeon: ['🧱', '🚪', '🕳️'],
+            city: ['🏠', '🏪', '⛲'],
+            wilderness: ['🌾', '🪨', '🌳'],
+            coast: ['🪨', '🐚', '🌊'],
+            mountain: ['⛰️', '🪨', '❄️'],
+            swamp: ['🌿', '💀', '🐸'],
+            desert: ['🌵', '🪨', '☀️'],
+            underdark: ['🍄', '💎', '🕳️'],
+            plane: ['✨', '🌀', '⚡']
+        };
+        
+        const symbols = terrainMap[environment] || terrainMap.forest;
+        
+        // Place terrain features (15-25 features)
+        const terrainCount = Math.floor(Math.random() * 11) + 15;
+        const usedPositions = new Set();
+        
+        for (let i = 0; i < terrainCount; i++) {
+            let x, y, posKey;
+            do {
+                x = Math.floor(Math.random() * gridSize);
+                y = Math.floor(Math.random() * gridSize);
+                posKey = `${x},${y}`;
+            } while (usedPositions.has(posKey));
+            
+            usedPositions.add(posKey);
+            
+            const symbol = getRandomItem(symbols);
+            drawSymbol(ctx, symbol, x * cellSize + cellSize/2, y * cellSize + cellSize/2, 16);
+        }
+        
+        // Place monsters
+        monsters.forEach(group => {
+            for (let i = 0; i < group.count; i++) {
+                let x, y, posKey;
+                let attempts = 0;
+                do {
+                    x = Math.floor(Math.random() * gridSize);
+                    y = Math.floor(Math.random() * gridSize);
+                    posKey = `${x},${y}`;
+                    attempts++;
+                } while (usedPositions.has(posKey) && attempts < 50);
+                
+                if (attempts < 50) {
+                    usedPositions.add(posKey);
+                    const monsterSymbol = group.role === 'Boss' ? '👹' : 
+                                        group.role === 'Leader' ? '🦹' :
+                                        group.role === 'Minion' ? '👻' : '👾';
+                    drawSymbol(ctx, monsterSymbol, x * cellSize + cellSize/2, y * cellSize + cellSize/2, 18);
+                }
+            }
+        });
+        
+        // Place 2-3 entry/exit points at edges
+        const entryPoints = Math.floor(Math.random() * 2) + 2;
+        for (let i = 0; i < entryPoints; i++) {
+            const side = Math.floor(Math.random() * 4); // 0=top, 1=right, 2=bottom, 3=left
+            let x, y;
+            
+            switch(side) {
+                case 0: // top
+                    x = Math.floor(Math.random() * gridSize);
+                    y = 0;
+                    break;
+                case 1: // right
+                    x = gridSize - 1;
+                    y = Math.floor(Math.random() * gridSize);
+                    break;
+                case 2: // bottom
+                    x = Math.floor(Math.random() * gridSize);
+                    y = gridSize - 1;
+                    break;
+                case 3: // left
+                    x = 0;
+                    y = Math.floor(Math.random() * gridSize);
+                    break;
+            }
+            
+            const symbol = i === 0 ? '🏃' : '➡️';
+            drawSymbol(ctx, symbol, x * cellSize + cellSize/2, y * cellSize + cellSize/2, 16);
+        }
+    }
+    
+    function drawSymbol(ctx, symbol, x, y, size = 16) {
+        ctx.font = `${size}px serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Add slight shadow for visibility
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillText(symbol, x + 1, y + 1);
+        
+        // Draw the symbol
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(symbol, x, y);
+    }
+
     function generateEncounter() {
         const partyLevel = document.getElementById('party-level').value;
         const partySize = parseInt(document.getElementById('party-size').value);
@@ -443,6 +570,19 @@ import Layout from '../layouts/BlogPost.astro';
                 </div>
 
                 <div>
+                    <h4 class="font-bold text-gray-700 mb-2">🗺️ Battle Map</h4>
+                    <div class="bg-gray-900 p-4 rounded border">
+                        <canvas id="battleMap" width="300" height="300" class="w-full max-w-sm mx-auto border border-gray-600 rounded"></canvas>
+                        <div class="mt-3 text-xs text-gray-300 flex flex-wrap gap-4 justify-center">
+                            <span>🌲 Terrain</span>
+                            <span>👾 Monsters</span>
+                            <span>🏃 Entry/Exit</span>
+                            <span class="text-gray-500">□ Grid</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
                     <h4 class="font-bold text-gray-700 mb-2">👾 Opposition</h4>
                     <ul class="text-sm space-y-2">
         `;
@@ -504,6 +644,11 @@ import Layout from '../layouts/BlogPost.astro';
         `;
 
         output.innerHTML = html;
+        
+        // Generate battle map after DOM update
+        setTimeout(() => {
+            generateBattleMap(document.getElementById('environment').value, encounter.monsters);
+        }, 10);
     }
 
     document.getElementById('generate-btn').addEventListener('click', generateEncounter);
