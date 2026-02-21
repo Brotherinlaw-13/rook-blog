@@ -30,6 +30,16 @@ import Layout from '../layouts/BlogPost.astro';
                     </div>
 
                     <div>
+                        <label for="party-size" class="block font-semibold mb-2">Party Size</label>
+                        <select id="party-size" class="w-full p-2 border rounded">
+                            <option value="3">3 Players</option>
+                            <option value="4" selected>4 Players</option>
+                            <option value="5">5 Players</option>
+                            <option value="6">6 Players</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label for="environment" class="block font-semibold mb-2">Environment</label>
                         <select id="environment" class="w-full p-2 border rounded">
                             <option value="forest">🌲 Forest</option>
@@ -61,7 +71,7 @@ import Layout from '../layouts/BlogPost.astro';
                         <label for="difficulty" class="block font-semibold mb-2">Difficulty</label>
                         <select id="difficulty" class="w-full p-2 border rounded">
                             <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
+                            <option value="medium" selected>Medium</option>
                             <option value="hard">Hard</option>
                             <option value="deadly">Deadly</option>
                         </select>
@@ -85,44 +95,172 @@ import Layout from '../layouts/BlogPost.astro';
 </Layout>
 
 <script>
-    // Encounter data
     const encounterData = {
         monsters: {
             '1-3': {
-                easy: ['Goblin', 'Kobold', 'Giant Rat', 'Skeleton', 'Wolf'],
-                medium: ['Orc', 'Hobgoblin', 'Dire Wolf', 'Ghoul', 'Owlbear'],
-                hard: ['Ogre', 'Troll', 'Minotaur', 'Wight', 'Hill Giant'],
-                deadly: ['Dragon Wyrmling', 'Beholder Zombie', 'Mind Flayer Tadpole']
+                easy: [
+                    {name: 'Goblin', cr: '1/4'}, {name: 'Kobold', cr: '1/8'}, {name: 'Giant Rat', cr: '1/8'},
+                    {name: 'Skeleton', cr: '1/4'}, {name: 'Wolf', cr: '1/4'}, {name: 'Stirge', cr: '1/8'},
+                    {name: 'Bandit', cr: '1/8'}, {name: 'Zombie', cr: '1/4'}, {name: 'Blood Hawk', cr: '1/8'}
+                ],
+                medium: [
+                    {name: 'Orc', cr: '1/2'}, {name: 'Hobgoblin', cr: '1/2'}, {name: 'Dire Wolf', cr: '1'},
+                    {name: 'Ghoul', cr: '1'}, {name: 'Bugbear', cr: '1'}, {name: 'Spy', cr: '1'},
+                    {name: 'Shadow', cr: '1/2'}, {name: 'Swarm of Insects', cr: '1/2'}, {name: 'Harpy', cr: '1'}
+                ],
+                hard: [
+                    {name: 'Ogre', cr: '2'}, {name: 'Ankheg', cr: '2'}, {name: 'Mimic', cr: '2'},
+                    {name: 'Wight', cr: '3'}, {name: 'Owlbear', cr: '3'}, {name: 'Gelatinous Cube', cr: '2'},
+                    {name: 'Gargoyle', cr: '2'}, {name: 'Merrow', cr: '2'}
+                ],
+                deadly: [
+                    {name: 'Manticore', cr: '3'}, {name: 'Green Hag', cr: '3'}, {name: 'Displacer Beast', cr: '3'},
+                    {name: 'Phase Spider', cr: '3'}, {name: 'Minotaur', cr: '3'}
+                ]
             },
             '4-6': {
-                easy: ['Orc', 'Hobgoblin', 'Brown Bear', 'Bugbear', 'Ghoul'],
-                medium: ['Owlbear', 'Minotaur', 'Basilisk', 'Hell Hound', 'Banshee'],
-                hard: ['Hill Giant', 'Stone Giant', 'Young Dragon', 'Vampire Spawn'],
-                deadly: ['Adult Dragon', 'Beholder', 'Mind Flayer', 'Lich']
+                easy: [
+                    {name: 'Orc', cr: '1/2'}, {name: 'Hobgoblin', cr: '1/2'}, {name: 'Bugbear', cr: '1'},
+                    {name: 'Ghoul', cr: '1'}, {name: 'Dire Wolf', cr: '1'}, {name: 'Specter', cr: '1'}
+                ],
+                medium: [
+                    {name: 'Owlbear', cr: '3'}, {name: 'Basilisk', cr: '3'}, {name: 'Hell Hound', cr: '3'},
+                    {name: 'Banshee', cr: '4'}, {name: 'Flameskull', cr: '4'}, {name: 'Ettin', cr: '4'},
+                    {name: 'Werewolf', cr: '3'}, {name: 'Minotaur', cr: '3'}
+                ],
+                hard: [
+                    {name: 'Hill Giant', cr: '5'}, {name: 'Troll', cr: '5'}, {name: 'Salamander', cr: '5'},
+                    {name: 'Vampire Spawn', cr: '5'}, {name: 'Wraith', cr: '5'}, {name: 'Revenant', cr: '5'}
+                ],
+                deadly: [
+                    {name: 'Young Dragon', cr: '7'}, {name: 'Mind Flayer', cr: '7'},
+                    {name: 'Stone Giant', cr: '7'}, {name: 'Oni', cr: '7'}
+                ]
             },
             '7-9': {
-                easy: ['Owlbear', 'Minotaur', 'Basilisk', 'Hell Hound'],
-                medium: ['Hill Giant', 'Stone Giant', 'Young Dragon', 'Vampire Spawn'],
-                hard: ['Adult Dragon', 'Beholder', 'Mind Flayer', 'Death Knight'],
-                deadly: ['Ancient Dragon', 'Tarrasque', 'Demon Lord', 'Archdemon']
+                easy: [
+                    {name: 'Troll', cr: '5'}, {name: 'Wraith', cr: '5'}, {name: 'Shambling Mound', cr: '5'},
+                    {name: 'Hill Giant', cr: '5'}, {name: 'Gladiator', cr: '5'}
+                ],
+                medium: [
+                    {name: 'Young Dragon', cr: '7'}, {name: 'Stone Giant', cr: '7'}, {name: 'Mind Flayer', cr: '7'},
+                    {name: 'Shield Guardian', cr: '7'}, {name: 'Oni', cr: '7'}
+                ],
+                hard: [
+                    {name: 'Frost Giant', cr: '8'}, {name: 'Hydra', cr: '8'}, {name: 'Spirit Naga', cr: '8'},
+                    {name: 'Assassin', cr: '8'}, {name: 'Cloud Giant', cr: '9'}
+                ],
+                deadly: [
+                    {name: 'Adult Dragon', cr: '13'}, {name: 'Beholder', cr: '13'},
+                    {name: 'Rakshasa', cr: '13'}, {name: 'Storm Giant', cr: '13'}
+                ]
+            },
+            '10-12': {
+                easy: [
+                    {name: 'Frost Giant', cr: '8'}, {name: 'Hydra', cr: '8'}, {name: 'Cloud Giant', cr: '9'},
+                    {name: 'Treant', cr: '9'}, {name: 'Clay Golem', cr: '9'}
+                ],
+                medium: [
+                    {name: 'Young Dragon', cr: '10'}, {name: 'Aboleth', cr: '10'}, {name: 'Guardian Naga', cr: '10'},
+                    {name: 'Stone Golem', cr: '10'}, {name: 'Gynosphinx', cr: '11'}
+                ],
+                hard: [
+                    {name: 'Adult Dragon', cr: '13'}, {name: 'Beholder', cr: '13'}, {name: 'Rakshasa', cr: '13'},
+                    {name: 'Vampire', cr: '13'}, {name: 'Storm Giant', cr: '13'}
+                ],
+                deadly: [
+                    {name: 'Purple Worm', cr: '15'}, {name: 'Mummy Lord', cr: '15'},
+                    {name: 'Iron Golem', cr: '16'}, {name: 'Adult Red Dragon', cr: '17'}
+                ]
+            },
+            '13-15': {
+                easy: [
+                    {name: 'Adult Dragon', cr: '13'}, {name: 'Beholder', cr: '13'},
+                    {name: 'Storm Giant', cr: '13'}, {name: 'Vampire', cr: '13'}
+                ],
+                medium: [
+                    {name: 'Purple Worm', cr: '15'}, {name: 'Mummy Lord', cr: '15'},
+                    {name: 'Iron Golem', cr: '16'}, {name: 'Planetar', cr: '16'}
+                ],
+                hard: [
+                    {name: 'Adult Red Dragon', cr: '17'}, {name: 'Death Knight', cr: '17'},
+                    {name: 'Androsphinx', cr: '17'}, {name: 'Dragon Turtle', cr: '17'}
+                ],
+                deadly: [
+                    {name: 'Lich', cr: '21'}, {name: 'Solar', cr: '21'},
+                    {name: 'Ancient Dragon', cr: '20'}, {name: 'Pit Fiend', cr: '20'}
+                ]
+            },
+            '16-20': {
+                easy: [
+                    {name: 'Adult Red Dragon', cr: '17'}, {name: 'Death Knight', cr: '17'},
+                    {name: 'Dragon Turtle', cr: '17'}, {name: 'Demilich', cr: '18'}
+                ],
+                medium: [
+                    {name: 'Ancient Dragon', cr: '20'}, {name: 'Pit Fiend', cr: '20'},
+                    {name: 'Balor', cr: '19'}, {name: 'Empyrean', cr: '23'}
+                ],
+                hard: [
+                    {name: 'Lich', cr: '21'}, {name: 'Solar', cr: '21'},
+                    {name: 'Kraken', cr: '23'}, {name: 'Ancient Red Dragon', cr: '24'}
+                ],
+                deadly: [
+                    {name: 'Tarrasque', cr: '30'}, {name: 'Tiamat', cr: '30'},
+                    {name: 'Empyrean', cr: '23'}, {name: 'Kraken', cr: '23'}
+                ]
             }
         },
         
         environments: {
             forest: {
                 description: "Ancient trees loom overhead, their canopy filtering dappled sunlight. The forest floor is carpeted with fallen leaves and tangled undergrowth.",
-                features: ["Dense undergrowth", "Fallen logs", "Hidden clearings", "Animal paths", "Ancient trees"],
-                hazards: ["Pit traps", "Poisonous plants", "Unstable ground", "Wild animals"]
+                features: ["Dense undergrowth", "Fallen logs", "Hidden clearings", "Animal paths", "Ancient trees", "Mushroom rings", "Shallow streams"],
+                hazards: ["Pit traps", "Poisonous plants", "Unstable branches", "Wild animals", "Quicksand"]
             },
             dungeon: {
                 description: "Stone corridors echo with the drip of water and the scurrying of unseen creatures. Torches cast flickering shadows on ancient walls.",
-                features: ["Stone corridors", "Iron doors", "Ancient murals", "Spiral staircases", "Hidden chambers"],
-                hazards: ["Pressure plates", "Dart traps", "Falling blocks", "Poison gas"]
+                features: ["Stone corridors", "Iron doors", "Ancient murals", "Spiral staircases", "Hidden chambers", "Flooded rooms", "Collapsed tunnels"],
+                hazards: ["Pressure plates", "Dart traps", "Falling blocks", "Poison gas", "Locked portcullises"]
             },
             city: {
                 description: "Bustling streets filled with merchants, guards, and citizens going about their daily business. Buildings tower overhead, casting shadows on cobblestone roads.",
-                features: ["Crowded markets", "Guard patrols", "Noble districts", "Taverns", "Rooftops"],
-                hazards: ["Crowds", "Pickpockets", "City watch", "Political intrigue"]
+                features: ["Crowded markets", "Guard patrols", "Noble districts", "Taverns", "Rooftops", "Sewer entrances", "Clock towers"],
+                hazards: ["Stampeding crowds", "Pickpockets", "City watch", "Political intrigue", "Collapsing scaffolding"]
+            },
+            wilderness: {
+                description: "Open grasslands stretch to the horizon, broken only by scattered boulders and lonely copses of trees. The wind carries the scent of rain.",
+                features: ["Rolling hills", "Boulder fields", "Lonely farmsteads", "Ancient ruins", "River crossings", "Abandoned camps"],
+                hazards: ["Flash floods", "Lightning storms", "Stampeding herds", "Hidden sinkholes", "Exposed terrain"]
+            },
+            coast: {
+                description: "Waves crash against jagged rocks as sea spray fills the air. Tide pools glimmer between weathered stone, and gulls wheel overhead.",
+                features: ["Sea caves", "Tide pools", "Rocky outcrops", "Shipwrecks", "Sandy coves", "Cliff paths", "Lighthouses"],
+                hazards: ["Rising tides", "Slippery rocks", "Riptides", "Sudden storms", "Crumbling cliff edges"]
+            },
+            mountain: {
+                description: "Craggy peaks pierce the clouds above. The air is thin and cold, and the narrow paths cling to sheer cliff faces.",
+                features: ["Narrow ledges", "Mountain caves", "Frozen waterfalls", "Eagle nests", "Ancient shrines", "Mining tunnels"],
+                hazards: ["Avalanches", "Rockslides", "Thin air", "Ice patches", "Sudden blizzards", "Crevasses"]
+            },
+            swamp: {
+                description: "Murky water stretches between twisted, moss-draped trees. The air is thick with the buzz of insects and the stench of decay.",
+                features: ["Stagnant pools", "Twisted mangroves", "Sunken ruins", "Floating logs", "Will-o'-wisps", "Hag hovels"],
+                hazards: ["Quicksand", "Disease", "Leeches", "Toxic fumes", "Hidden sinkholes", "Crocodiles"]
+            },
+            desert: {
+                description: "Endless dunes shimmer under a merciless sun. Mirages dance on the horizon, and the sand shifts with every gust of wind.",
+                features: ["Oasis springs", "Sand dunes", "Buried temples", "Nomad camps", "Petrified forests", "Canyon passes"],
+                hazards: ["Dehydration", "Sandstorms", "Heat exhaustion", "Scorpions", "Mirages", "Shifting sands"]
+            },
+            underdark: {
+                description: "An immense cavern stretches into darkness. Bioluminescent fungi cast an eerie glow over stalagmites and underground rivers.",
+                features: ["Mushroom forests", "Underground lakes", "Crystal caverns", "Drow outposts", "Stalactite galleries", "Lava tubes"],
+                hazards: ["Cave-ins", "Toxic spores", "Magma vents", "Silence zones", "Faerzress radiation", "Abyssal rifts"]
+            },
+            plane: {
+                description: "Reality bends and warps in impossible ways. The landscape defies natural law, with floating islands, inverted gravity, and skies that burn with alien light.",
+                features: ["Floating platforms", "Portals", "Elemental storms", "Crystalline towers", "Memory echoes", "Time pockets"],
+                hazards: ["Reality tears", "Planar instability", "Wild magic zones", "Gravity shifts", "Psychic storms"]
             }
         },
 
@@ -132,67 +270,142 @@ import Layout from '../layouts/BlogPost.astro';
             "Local villagers report hearing unearthly sounds",
             "A valuable artifact was stolen and the thieves fled here",
             "An old map leads to treasure hidden in this location",
-            "A desperate message was found asking for help in this area",
-            "Scouts report unusual monster activity here",
+            "A desperate message was found asking for help",
+            "Scouts report unusual monster activity nearby",
             "A rival adventuring party was last seen heading this way",
             "Ancient magic still lingers from a forgotten civilization",
-            "A local noble has put a bounty on creatures in this area"
+            "A local noble has put a bounty on creatures in this area",
+            "Children from the village have gone missing one by one",
+            "An old ally sends word they are trapped and in danger",
+            "The barrier between planes is thinning at this location",
+            "A prophecy speaks of an event that will happen here tonight",
+            "Two factions are on the verge of war, and this is the flashpoint",
+            "A once-friendly creature has turned aggressive without explanation",
+            "The dead have been seen walking near this location",
+            "A cursed item has been traced to a source in this area",
+            "Someone is impersonating a member of the party",
+            "The party's patron has a secret agenda for this mission"
         ],
 
         tactics: {
             combat: [
                 "Use terrain to funnel enemies into chokepoints",
                 "Have enemies retreat and regroup if losing",
-                "Add environmental hazards mid-fight",
+                "Add environmental hazards mid-fight (fire spreading, ceiling collapsing)",
                 "Use minions to flank while the boss casts spells",
-                "Have reinforcements arrive after 3-4 rounds"
+                "Have reinforcements arrive after 3-4 rounds",
+                "Give the boss a dramatic escape route if near death",
+                "Target the healer first to create panic",
+                "Use grapples and shoves to split the party"
             ],
             social: [
-                "The NPC has conflicting motivations",
-                "There's more than one way to get information",
-                "Offer multiple conversation paths",
-                "Include a time pressure element",
-                "Let players discover hidden agendas"
+                "The NPC has conflicting motivations they won't reveal easily",
+                "There's more than one way to get the information",
+                "Offer multiple conversation paths with different consequences",
+                "Include a time pressure: someone is listening",
+                "Let players discover hidden agendas through Insight checks",
+                "The NPC responds differently to different party members",
+                "A lie will work short-term but backfire later",
+                "The NPC knows something the party needs but wants something in return"
             ],
             exploration: [
                 "Include multiple paths to the same destination",
-                "Hide clues in unexpected places",
+                "Hide clues in unexpected places (ceiling, underwater, invisible)",
                 "Use skill challenges for complex obstacles",
-                "Make the environment tell a story",
-                "Reward creative problem solving"
+                "Make the environment tell a story of what happened before",
+                "Reward creative problem solving over brute force",
+                "Include a ticking clock: the dungeon is flooding, the portal is closing",
+                "Let Investigation and Perception reveal different things",
+                "Place a moral dilemma at the heart of the exploration"
+            ],
+            puzzle: [
+                "Use physical props or handouts if possible",
+                "Have multiple solutions, not just one 'correct' answer",
+                "Build in escalating hints through the environment",
+                "Combine mental and physical elements (solve the riddle while fighting)",
+                "Let different ability scores contribute to the solution",
+                "The puzzle changes or resets if they take too long",
+                "Include a red herring that looks important but isn't",
+                "The solution requires information from earlier in the adventure"
+            ],
+            stealth: [
+                "Map out guard patrol routes and timing windows",
+                "Provide multiple infiltration points with different risks",
+                "Include noise hazards (creaky floors, sleeping dogs, alarm spells)",
+                "Give consequences for partial detection (heightened alert, not instant combat)",
+                "Reward scouting and planning before execution",
+                "Include a 'panic button' option if stealth fails completely",
+                "Have an NPC inside who could help or hinder",
+                "The target is moving: the window of opportunity is narrow"
+            ],
+            mixed: [
+                "Start with one type and shift unexpectedly (social becomes combat)",
+                "Let the party's approach determine the encounter type",
+                "Include both a diplomatic and violent solution",
+                "Layer the encounter: negotiate first, explore second, fight third",
+                "The environment changes mid-encounter (earthquake, spell effect)",
+                "Different party members face different challenges simultaneously",
+                "Success in one aspect makes another easier (stealth reduces combat difficulty)",
+                "The 'right' approach isn't obvious until they're committed"
             ]
         }
     };
 
     function generateEncounter() {
         const partyLevel = document.getElementById('party-level').value;
+        const partySize = parseInt(document.getElementById('party-size').value);
         const environment = document.getElementById('environment').value;
         const encounterType = document.getElementById('encounter-type').value;
         const difficulty = document.getElementById('difficulty').value;
 
-        // Generate encounter
         const encounter = {
-            monsters: getRandomMonsters(partyLevel, difficulty),
-            environment: encounterData.environments[environment] || encounterData.environments['forest'],
+            monsters: getRandomMonsters(partyLevel, difficulty, partySize),
+            environment: encounterData.environments[environment],
             plotHook: getRandomItem(encounterData.plotHooks),
-            tactics: getRandomItems(encounterData.tactics[encounterType] || encounterData.tactics['combat'], 2)
+            tactics: getRandomItems(encounterData.tactics[encounterType] || encounterData.tactics['combat'], 3)
         };
 
         displayEncounter(encounter, encounterType, difficulty);
     }
 
-    function getRandomMonsters(level, difficulty) {
+    function getRandomMonsters(level, difficulty, partySize) {
         const levelData = encounterData.monsters[level] || encounterData.monsters['1-3'];
         const difficultyMonsters = levelData[difficulty] || levelData['easy'];
         
-        const count = difficulty === 'deadly' ? 1 : difficulty === 'hard' ? Math.floor(Math.random() * 2) + 1 : Math.floor(Math.random() * 3) + 1;
-        const monsters = [];
+        const groups = [];
         
-        for (let i = 0; i < count; i++) {
-            monsters.push(getRandomItem(difficultyMonsters));
+        if (difficulty === 'deadly') {
+            // Boss + some minions
+            const boss = getRandomItem(difficultyMonsters);
+            groups.push({...boss, count: 1, role: 'Boss'});
+            // Add minions from easier tier
+            const minions = levelData['easy'] || difficultyMonsters;
+            const minionType = getRandomItem(minions);
+            const minionCount = Math.floor(Math.random() * partySize) + 2;
+            groups.push({...minionType, count: minionCount, role: 'Minion'});
+        } else if (difficulty === 'hard') {
+            // 1-2 tough monsters + support
+            const main = getRandomItem(difficultyMonsters);
+            const mainCount = Math.random() > 0.5 ? 2 : 1;
+            groups.push({...main, count: mainCount, role: 'Leader'});
+            const support = levelData['easy'] || difficultyMonsters;
+            const supportType = getRandomItem(support);
+            groups.push({...supportType, count: Math.floor(Math.random() * 3) + 2, role: 'Support'});
+        } else if (difficulty === 'medium') {
+            // A solid group
+            const primary = getRandomItem(difficultyMonsters);
+            groups.push({...primary, count: Math.floor(Math.random() * 2) + 2, role: 'Primary'});
+            if (Math.random() > 0.4) {
+                const secondary = getRandomItem(levelData['easy'] || difficultyMonsters);
+                groups.push({...secondary, count: Math.floor(Math.random() * 3) + 1, role: 'Secondary'});
+            }
+        } else {
+            // Easy: a straightforward group
+            const type = getRandomItem(difficultyMonsters);
+            groups.push({...type, count: Math.floor(Math.random() * partySize) + 2, role: 'Standard'});
         }
         
-        return monsters;
+        return groups;
     }
 
     function getRandomItem(array) {
@@ -201,16 +414,26 @@ import Layout from '../layouts/BlogPost.astro';
 
     function getRandomItems(array, count) {
         const shuffled = [...array].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
+        return shuffled.slice(0, Math.min(count, array.length));
     }
 
     function displayEncounter(encounter, type, difficulty) {
         const output = document.getElementById('encounter-output');
+        const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+        const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+        
+        let totalMonsters = encounter.monsters.reduce((sum, g) => sum + g.count, 0);
         
         let html = `
-            <div class="space-y-4">
-                <div class="border-b pb-2">
-                    <h3 class="text-xl font-bold text-blue-600">${type.charAt(0).toUpperCase() + type.slice(1)} Encounter (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})</h3>
+            <div class="space-y-5">
+                <div class="border-b pb-3">
+                    <h3 class="text-xl font-bold text-blue-600">${typeLabel} Encounter</h3>
+                    <span class="text-xs font-semibold px-2 py-1 rounded ${
+                        difficulty === 'deadly' ? 'bg-red-100 text-red-700' :
+                        difficulty === 'hard' ? 'bg-orange-100 text-orange-700' :
+                        difficulty === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-green-100 text-green-700'
+                    }">${diffLabel} · ${totalMonsters} creatures</span>
                 </div>
                 
                 <div>
@@ -221,11 +444,18 @@ import Layout from '../layouts/BlogPost.astro';
 
                 <div>
                     <h4 class="font-bold text-gray-700 mb-2">👾 Opposition</h4>
-                    <ul class="text-sm space-y-1">
+                    <ul class="text-sm space-y-2">
         `;
 
-        encounter.monsters.forEach(monster => {
-            html += `<li class="flex items-center"><span class="text-red-500 mr-2">⚔️</span>${monster}</li>`;
+        encounter.monsters.forEach(group => {
+            const roleColor = group.role === 'Boss' ? 'text-red-600' : 
+                             group.role === 'Leader' ? 'text-orange-600' : 
+                             group.role === 'Minion' ? 'text-gray-500' : 'text-gray-700';
+            html += `<li class="flex items-center gap-2">
+                <span class="text-red-500">⚔️</span>
+                <strong>${group.count}x ${group.name}</strong>
+                <span class="text-xs ${roleColor}">(CR ${group.cr}, ${group.role})</span>
+            </li>`;
         });
 
         html += `
@@ -234,37 +464,37 @@ import Layout from '../layouts/BlogPost.astro';
 
                 <div>
                     <h4 class="font-bold text-gray-700 mb-2">🗺️ Environment Features</h4>
-                    <div class="grid grid-cols-2 gap-1 text-xs">
+                    <ul class="text-sm space-y-1">
         `;
 
         encounter.environment.features.forEach(feature => {
-            html += `<span class="bg-green-100 px-2 py-1 rounded">${feature}</span>`;
+            html += `<li class="flex items-center gap-2"><span class="text-green-500">•</span> ${feature}</li>`;
         });
 
         html += `
-                    </div>
+                    </ul>
                 </div>
 
                 <div>
                     <h4 class="font-bold text-gray-700 mb-2">⚠️ Potential Hazards</h4>
-                    <div class="grid grid-cols-2 gap-1 text-xs">
+                    <ul class="text-sm space-y-1">
         `;
 
         encounter.environment.hazards.forEach(hazard => {
-            html += `<span class="bg-yellow-100 px-2 py-1 rounded">${hazard}</span>`;
+            html += `<li class="flex items-center gap-2"><span class="text-yellow-500">•</span> ${hazard}</li>`;
         });
 
         html += `
-                    </div>
+                    </ul>
                 </div>
 
                 <div>
                     <h4 class="font-bold text-gray-700 mb-2">🎯 Tactical Tips</h4>
-                    <ul class="text-sm space-y-1">
+                    <ul class="text-sm space-y-2">
         `;
 
         encounter.tactics.forEach(tactic => {
-            html += `<li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">💡</span>${tactic}</li>`;
+            html += `<li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5">💡</span> ${tactic}</li>`;
         });
 
         html += `
@@ -276,10 +506,7 @@ import Layout from '../layouts/BlogPost.astro';
         output.innerHTML = html;
     }
 
-    // Event listener
     document.getElementById('generate-btn').addEventListener('click', generateEncounter);
-
-    // Generate initial encounter
     generateEncounter();
 </script>
 </Layout>
