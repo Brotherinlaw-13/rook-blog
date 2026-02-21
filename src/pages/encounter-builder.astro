@@ -1,0 +1,285 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+    title="D&D Encounter Builder"
+    description="Generate creative encounters for your D&D sessions"
+    pubDate={new Date('2026-02-21')}
+    heroImage="/blog-placeholder-2.jpg"
+>
+    <div class="max-w-4xl mx-auto p-6">
+        <h1 class="text-4xl font-bold mb-8 text-center">🐉 D&D Encounter Builder</h1>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Input Panel -->
+            <div class="bg-gray-100 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4">Configure Your Encounter</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="party-level" class="block font-semibold mb-2">Party Level</label>
+                        <select id="party-level" class="w-full p-2 border rounded">
+                            <option value="1-3">Levels 1-3 (Novice)</option>
+                            <option value="4-6">Levels 4-6 (Apprentice)</option>
+                            <option value="7-9">Levels 7-9 (Expert)</option>
+                            <option value="10-12">Levels 10-12 (Champion)</option>
+                            <option value="13-15">Levels 13-15 (Hero)</option>
+                            <option value="16-20">Levels 16-20 (Legend)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="environment" class="block font-semibold mb-2">Environment</label>
+                        <select id="environment" class="w-full p-2 border rounded">
+                            <option value="forest">🌲 Forest</option>
+                            <option value="dungeon">🏰 Dungeon</option>
+                            <option value="city">🏛️ City</option>
+                            <option value="wilderness">🏕️ Wilderness</option>
+                            <option value="coast">🌊 Coast</option>
+                            <option value="mountain">⛰️ Mountain</option>
+                            <option value="swamp">🐊 Swamp</option>
+                            <option value="desert">🏜️ Desert</option>
+                            <option value="underdark">🕳️ Underdark</option>
+                            <option value="plane">✨ Other Plane</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="encounter-type" class="block font-semibold mb-2">Encounter Type</label>
+                        <select id="encounter-type" class="w-full p-2 border rounded">
+                            <option value="combat">⚔️ Combat</option>
+                            <option value="social">🗣️ Social</option>
+                            <option value="exploration">🗺️ Exploration</option>
+                            <option value="puzzle">🧩 Puzzle</option>
+                            <option value="stealth">🥷 Stealth</option>
+                            <option value="mixed">🎭 Mixed</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="difficulty" class="block font-semibold mb-2">Difficulty</label>
+                        <select id="difficulty" class="w-full p-2 border rounded">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                            <option value="deadly">Deadly</option>
+                        </select>
+                    </div>
+
+                    <button id="generate-btn" class="w-full bg-blue-600 text-white py-3 px-6 rounded font-bold hover:bg-blue-700 transition-colors">
+                        Generate Encounter ⚡
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output Panel -->
+            <div class="bg-white border-2 border-gray-200 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4">Your Encounter</h2>
+                <div id="encounter-output" class="text-gray-500 italic">
+                    Click "Generate Encounter" to create your adventure!
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    // Encounter data
+    const encounterData = {
+        monsters: {
+            '1-3': {
+                easy: ['Goblin', 'Kobold', 'Giant Rat', 'Skeleton', 'Wolf'],
+                medium: ['Orc', 'Hobgoblin', 'Dire Wolf', 'Ghoul', 'Owlbear'],
+                hard: ['Ogre', 'Troll', 'Minotaur', 'Wight', 'Hill Giant'],
+                deadly: ['Dragon Wyrmling', 'Beholder Zombie', 'Mind Flayer Tadpole']
+            },
+            '4-6': {
+                easy: ['Orc', 'Hobgoblin', 'Brown Bear', 'Bugbear', 'Ghoul'],
+                medium: ['Owlbear', 'Minotaur', 'Basilisk', 'Hell Hound', 'Banshee'],
+                hard: ['Hill Giant', 'Stone Giant', 'Young Dragon', 'Vampire Spawn'],
+                deadly: ['Adult Dragon', 'Beholder', 'Mind Flayer', 'Lich']
+            },
+            '7-9': {
+                easy: ['Owlbear', 'Minotaur', 'Basilisk', 'Hell Hound'],
+                medium: ['Hill Giant', 'Stone Giant', 'Young Dragon', 'Vampire Spawn'],
+                hard: ['Adult Dragon', 'Beholder', 'Mind Flayer', 'Death Knight'],
+                deadly: ['Ancient Dragon', 'Tarrasque', 'Demon Lord', 'Archdemon']
+            }
+        },
+        
+        environments: {
+            forest: {
+                description: "Ancient trees loom overhead, their canopy filtering dappled sunlight. The forest floor is carpeted with fallen leaves and tangled undergrowth.",
+                features: ["Dense undergrowth", "Fallen logs", "Hidden clearings", "Animal paths", "Ancient trees"],
+                hazards: ["Pit traps", "Poisonous plants", "Unstable ground", "Wild animals"]
+            },
+            dungeon: {
+                description: "Stone corridors echo with the drip of water and the scurrying of unseen creatures. Torches cast flickering shadows on ancient walls.",
+                features: ["Stone corridors", "Iron doors", "Ancient murals", "Spiral staircases", "Hidden chambers"],
+                hazards: ["Pressure plates", "Dart traps", "Falling blocks", "Poison gas"]
+            },
+            city: {
+                description: "Bustling streets filled with merchants, guards, and citizens going about their daily business. Buildings tower overhead, casting shadows on cobblestone roads.",
+                features: ["Crowded markets", "Guard patrols", "Noble districts", "Taverns", "Rooftops"],
+                hazards: ["Crowds", "Pickpockets", "City watch", "Political intrigue"]
+            }
+        },
+
+        plotHooks: [
+            "A merchant's caravan has gone missing on this route",
+            "Strange lights have been seen in this area at night",
+            "Local villagers report hearing unearthly sounds",
+            "A valuable artifact was stolen and the thieves fled here",
+            "An old map leads to treasure hidden in this location",
+            "A desperate message was found asking for help in this area",
+            "Scouts report unusual monster activity here",
+            "A rival adventuring party was last seen heading this way",
+            "Ancient magic still lingers from a forgotten civilization",
+            "A local noble has put a bounty on creatures in this area"
+        ],
+
+        tactics: {
+            combat: [
+                "Use terrain to funnel enemies into chokepoints",
+                "Have enemies retreat and regroup if losing",
+                "Add environmental hazards mid-fight",
+                "Use minions to flank while the boss casts spells",
+                "Have reinforcements arrive after 3-4 rounds"
+            ],
+            social: [
+                "The NPC has conflicting motivations",
+                "There's more than one way to get information",
+                "Offer multiple conversation paths",
+                "Include a time pressure element",
+                "Let players discover hidden agendas"
+            ],
+            exploration: [
+                "Include multiple paths to the same destination",
+                "Hide clues in unexpected places",
+                "Use skill challenges for complex obstacles",
+                "Make the environment tell a story",
+                "Reward creative problem solving"
+            ]
+        }
+    };
+
+    function generateEncounter() {
+        const partyLevel = document.getElementById('party-level').value;
+        const environment = document.getElementById('environment').value;
+        const encounterType = document.getElementById('encounter-type').value;
+        const difficulty = document.getElementById('difficulty').value;
+
+        // Generate encounter
+        const encounter = {
+            monsters: getRandomMonsters(partyLevel, difficulty),
+            environment: encounterData.environments[environment] || encounterData.environments['forest'],
+            plotHook: getRandomItem(encounterData.plotHooks),
+            tactics: getRandomItems(encounterData.tactics[encounterType] || encounterData.tactics['combat'], 2)
+        };
+
+        displayEncounter(encounter, encounterType, difficulty);
+    }
+
+    function getRandomMonsters(level, difficulty) {
+        const levelData = encounterData.monsters[level] || encounterData.monsters['1-3'];
+        const difficultyMonsters = levelData[difficulty] || levelData['easy'];
+        
+        const count = difficulty === 'deadly' ? 1 : difficulty === 'hard' ? Math.floor(Math.random() * 2) + 1 : Math.floor(Math.random() * 3) + 1;
+        const monsters = [];
+        
+        for (let i = 0; i < count; i++) {
+            monsters.push(getRandomItem(difficultyMonsters));
+        }
+        
+        return monsters;
+    }
+
+    function getRandomItem(array) {
+        return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function displayEncounter(encounter, type, difficulty) {
+        const output = document.getElementById('encounter-output');
+        
+        let html = `
+            <div class="space-y-4">
+                <div class="border-b pb-2">
+                    <h3 class="text-xl font-bold text-blue-600">${type.charAt(0).toUpperCase() + type.slice(1)} Encounter (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})</h3>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">🎭 Setup</h4>
+                    <p class="text-sm text-gray-600 mb-2">${encounter.environment.description}</p>
+                    <p class="text-sm text-blue-600 italic">"${encounter.plotHook}"</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">👾 Opposition</h4>
+                    <ul class="text-sm space-y-1">
+        `;
+
+        encounter.monsters.forEach(monster => {
+            html += `<li class="flex items-center"><span class="text-red-500 mr-2">⚔️</span>${monster}</li>`;
+        });
+
+        html += `
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">🗺️ Environment Features</h4>
+                    <div class="grid grid-cols-2 gap-1 text-xs">
+        `;
+
+        encounter.environment.features.forEach(feature => {
+            html += `<span class="bg-green-100 px-2 py-1 rounded">${feature}</span>`;
+        });
+
+        html += `
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">⚠️ Potential Hazards</h4>
+                    <div class="grid grid-cols-2 gap-1 text-xs">
+        `;
+
+        encounter.environment.hazards.forEach(hazard => {
+            html += `<span class="bg-yellow-100 px-2 py-1 rounded">${hazard}</span>`;
+        });
+
+        html += `
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">🎯 Tactical Tips</h4>
+                    <ul class="text-sm space-y-1">
+        `;
+
+        encounter.tactics.forEach(tactic => {
+            html += `<li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">💡</span>${tactic}</li>`;
+        });
+
+        html += `
+                    </ul>
+                </div>
+            </div>
+        `;
+
+        output.innerHTML = html;
+    }
+
+    // Event listener
+    document.getElementById('generate-btn').addEventListener('click', generateEncounter);
+
+    // Generate initial encounter
+    generateEncounter();
+</script>
+</Layout>
