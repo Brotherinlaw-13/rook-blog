@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root Juice - Plant Environment Wizard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .wizard-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wizard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .wizard-header h1 {
+            color: #2d6a3f;
+            margin: 0;
+            font-size: 2em;
+        }
+        
+        .wizard-subtitle {
+            color: #6c757d;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            height: 6px;
+            border-radius: 3px;
+            margin: 20px 0 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #2d6a3f, #4a8c5f);
+            height: 100%;
+            transition: width 0.3s ease;
+            width: 12.5%;
+        }
+        
+        .question-container {
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .question-container.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .question-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .botanist-note {
+            background: #f8f9fa;
+            border-left: 4px solid #2d6a3f;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #6c757d;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option-button {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            font-size: 1em;
+        }
+        
+        .option-button:hover {
+            border-color: #2d6a3f;
+            background: #f8f9fa;
+        }
+        
+        .option-button.selected {
+            border-color: #2d6a3f;
+            background: #e8f5e8;
+            color: #2d6a3f;
+            font-weight: 600;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .nav-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-button.secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .nav-button.primary {
+            background: #2d6a3f;
+            color: white;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-1px);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-container {
+            display: none;
+            text-align: center;
+        }
+        
+        .results-container.active {
+            display: block;
+        }
+        
+        .result-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        .result-title {
+            font-size: 1.5em;
+            color: #2d6a3f;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .result-schedule {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .schedule-frequency {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2d6a3f;
+        }
+        
+        .environmental-factors {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="wizard-container">
+        <div class="wizard-header">
+            <h1>🌱 Root Juice</h1>
+            <div class="wizard-subtitle">Plant Environment Assessment</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Question 1: Plant Type -->
+        <div class="question-container active" id="question-1">
+            <div class="question-title">What type of plant are we caring for?</div>
+            <div class="botanist-note">"Each plant has its own personality - let's find yours!"</div>
+            <div class="option-group">
+                <div class="option-button" data-value="monstera">🌿 Monstera Deliciosa</div>
+                <div class="option-button" data-value="pothos">🌱 Pothos</div>
+                <div class="option-button" data-value="snake_plant">🐍 Snake Plant</div>
+                <div class="option-button" data-value="fiddle_leaf">🎻 Fiddle Leaf Fig</div>
+                <div class="option-button" data-value="peace_lily">☮️ Peace Lily</div>
+            </div>
+        </div>
+
+        <!-- Question 2: Room Type -->
+        <div class="question-container" id="question-2">
+            <div class="question-title">Which room is your plant calling home?</div>
+            <div class="botanist-note">"Location is everything - each room has its own microclimate!"</div>
+            <div class="option-group">
+                <div class="option-button" data-value="living_room">🛋️ Living Room</div>
+                <div class="option-button" data-value="bedroom">🛏️ Bedroom</div>
+                <div class="option-button" data-value="kitchen">🍳 Kitchen</div>
+                <div class="option-button" data-value="bathroom">🚿 Bathroom</div>
+                <div class="option-button" data-value="office">💻 Home Office</div>
+            </div>
+        </div>
+
+        <!-- Question 3: Window Proximity -->
+        <div class="question-container" id="question-3">
+            <div class="question-title">How close is your plant to the nearest window?</div>
+            <div class="botanist-note">"Distance from windows affects both light and temperature - crucial factors!"</div>
+            <div class="option-group">
+                <div class="option-button" data-value="windowsill">🪟 Right on the windowsill</div>
+                <div class="option-button" data-value="very_close">📏 Within 1-2 feet</div>
+                <div class="option-button" data-value="nearby">↔️ 3-6 feet away</div>
+                <div class="option-button" data-value="distant">🚶 6+ feet away</div>
+                <div class="option-button" data-value="no_direct_light">🌫️ No direct window light</div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-container" id="results">
+            <div class="result-icon">🎉</div>
+            <div class="result-title">Your Personalized Care Schedule</div>
+            <div class="result-schedule">
+                <div class="schedule-frequency" id="scheduleResult">Every 5 days</div>
+                <div>Based on your plant's specific environment</div>
+            </div>
+            <div class="environmental-factors">
+                <h4>Environmental Factors:</h4>
+                <div id="environmentalFactors">
+                    <!-- Factors will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="botanist-note" id="botanistAdvice">
+                "Lovely setup! Your Monstera's living its best life in that spot."
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button secondary" id="prevButton" onclick="previousQuestion()" disabled>Previous</button>
+            <button class="nav-button primary" id="nextButton" onclick="nextQuestion()" disabled>Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        let totalQuestions = 3; // Simplified for demo
+        let answers = {};
+        
+        function updateProgress() {
+            const progressPercent = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+        }
+        
+        function showQuestion(questionNum) {
+            // Hide all questions
+            document.querySelectorAll('.question-container').forEach(q => q.classList.remove('active'));
+            document.querySelector('.results-container').classList.remove('active');
+            
+            if (questionNum <= totalQuestions) {
+                document.getElementById('question-' + questionNum).classList.add('active');
+                document.getElementById('prevButton').disabled = questionNum === 1;
+                document.getElementById('nextButton').disabled = !answers[currentQuestion];
+                document.getElementById('nextButton').textContent = questionNum === totalQuestions ? 'See Results' : 'Next';
+            } else {
+                showResults();
+            }
+        }
+        
+        function nextQuestion() {
+            if (currentQuestion <= totalQuestions) {
+                currentQuestion++;
+                updateProgress();
+                showQuestion(currentQuestion);
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                currentQuestion--;
+                updateProgress();
+                showQuestion(currentQuestion);
+            }
+        }
+        
+        function showResults() {
+            document.querySelector('.results-container').classList.add('active');
+            document.getElementById('prevButton').style.display = 'none';
+            document.getElementById('nextButton').style.display = 'none';
+            
+            // Simple result calculation (in reality, this would use the full algorithm)
+            let baseDays = 7;
+            let factors = [];
+            
+            if (answers[1] === 'snake_plant') {
+                baseDays = 10;
+                factors.push('• Snake plants prefer infrequent watering');
+            }
+            
+            if (answers[2] === 'bathroom') {
+                baseDays -= 1;
+                factors.push('• Bathroom humidity reduces water needs');
+            } else if (answers[2] === 'kitchen') {
+                baseDays -= 1;
+                factors.push('• Kitchen humidity from cooking helps');
+            }
+            
+            if (answers[3] === 'windowsill' || answers[3] === 'very_close') {
+                baseDays -= 1;
+                factors.push('• Close to window = more light = faster metabolism');
+            }
+            
+            document.getElementById('scheduleResult').textContent = `Every ${baseDays} days`;
+            document.getElementById('environmentalFactors').innerHTML = factors.join('<br>');
+            document.getElementById('botanistAdvice').textContent = 
+                "Brilliant! Your plant's environment analysis is complete. This personalized schedule considers all the unique factors in your space.";
+        }
+        
+        // Add click handlers for option buttons
+        document.querySelectorAll('.option-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const questionContainer = this.closest('.question-container');
+                const questionId = questionContainer.id.split('-')[1];
+                
+                // Remove selected class from siblings
+                questionContainer.querySelectorAll('.option-button').forEach(btn => 
+                    btn.classList.remove('selected'));
+                
+                // Add selected class to clicked button
+                this.classList.add('selected');
+                
+                // Store answer
+                answers[parseInt(questionId)] = this.dataset.value;
+                
+                // Enable next button
+                document.getElementById('nextButton').disabled = false;
+            });
+        });
+        
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
