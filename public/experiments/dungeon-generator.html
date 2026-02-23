@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Dungeon Generator</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace; 
+            background: #1a1a1a; 
+            color: #00ff00; 
+            padding: 20px; 
+            text-align: center;
+        }
+        .dungeon { 
+            white-space: pre; 
+            font-size: 12px; 
+            line-height: 1; 
+            margin: 20px auto; 
+            display: inline-block; 
+            background: #000; 
+            padding: 10px; 
+            border: 2px solid #00ff00;
+        }
+        button { 
+            background: #00ff00; 
+            color: #000; 
+            border: none; 
+            padding: 10px 20px; 
+            font-family: inherit; 
+            cursor: pointer; 
+            margin: 10px;
+        }
+        button:hover { background: #00cc00; }
+        h1 { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+        .info { font-size: 14px; margin: 10px; color: #888; }
+    </style>
+</head>
+<body>
+    <h1>⚔️ ASCII DUNGEON GENERATOR ⚔️</h1>
+    <p class="info">Generated using cellular automata • Press GENERATE for new dungeon</p>
+    
+    <button onclick="generateDungeon()">GENERATE DUNGEON</button>
+    <button onclick="downloadDungeon()">DOWNLOAD MAP</button>
+    
+    <div class="dungeon" id="dungeon"></div>
+    
+    <p class="info">
+        Legend: █ = Wall | . = Floor | @ = Player Start | $ = Treasure | E = Exit
+    </p>
+
+    <script>
+        let currentDungeon = '';
+        
+        function generateDungeon() {
+            const width = 60;
+            const height = 30;
+            let grid = [];
+            
+            // Initialize with random noise
+            for (let y = 0; y < height; y++) {
+                grid[y] = [];
+                for (let x = 0; x < width; x++) {
+                    grid[y][x] = Math.random() < 0.45 ? '█' : '.';
+                }
+            }
+            
+            // Cellular automata smoothing (3 iterations)
+            for (let iter = 0; iter < 3; iter++) {
+                let newGrid = [];
+                for (let y = 0; y < height; y++) {
+                    newGrid[y] = [];
+                    for (let x = 0; x < width; x++) {
+                        let wallCount = countWalls(grid, x, y);
+                        newGrid[y][x] = wallCount >= 4 ? '█' : '.';
+                    }
+                }
+                grid = newGrid;
+            }
+            
+            // Add borders
+            for (let x = 0; x < width; x++) {
+                grid[0][x] = '█';
+                grid[height-1][x] = '█';
+            }
+            for (let y = 0; y < height; y++) {
+                grid[y][0] = '█';
+                grid[y][width-1] = '█';
+            }
+            
+            // Place special items
+            placeSpecialItems(grid, width, height);
+            
+            // Convert to string
+            currentDungeon = grid.map(row => row.join('')).join('\n');
+            document.getElementById('dungeon').textContent = currentDungeon;
+        }
+        
+        function countWalls(grid, x, y) {
+            let count = 0;
+            for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                    let nx = x + dx;
+                    let ny = y + dy;
+                    if (nx < 0 || ny < 0 || nx >= grid[0].length || ny >= grid.length) {
+                        count++;
+                    } else if (grid[ny][nx] === '█') {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+        
+        function placeSpecialItems(grid, width, height) {
+            let attempts = 0;
+            
+            // Place player start (@)
+            while (attempts < 50) {
+                let x = Math.floor(Math.random() * (width - 2)) + 1;
+                let y = Math.floor(Math.random() * (height - 2)) + 1;
+                if (grid[y][x] === '.') {
+                    grid[y][x] = '@';
+                    break;
+                }
+                attempts++;
+            }
+            
+            // Place treasures ($)
+            for (let i = 0; i < 3; i++) {
+                attempts = 0;
+                while (attempts < 30) {
+                    let x = Math.floor(Math.random() * (width - 2)) + 1;
+                    let y = Math.floor(Math.random() * (height - 2)) + 1;
+                    if (grid[y][x] === '.') {
+                        grid[y][x] = '$';
+                        break;
+                    }
+                    attempts++;
+                }
+            }
+            
+            // Place exit (E)
+            attempts = 0;
+            while (attempts < 50) {
+                let x = Math.floor(Math.random() * (width - 2)) + 1;
+                let y = Math.floor(Math.random() * (height - 2)) + 1;
+                if (grid[y][x] === '.') {
+                    grid[y][x] = 'E';
+                    break;
+                }
+                attempts++;
+            }
+        }
+        
+        function downloadDungeon() {
+            if (!currentDungeon) return;
+            
+            const blob = new Blob([currentDungeon], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dungeon-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Generate initial dungeon
+        generateDungeon();
+    </script>
+</body>
+</html>
