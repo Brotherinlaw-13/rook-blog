@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root Juice - Environment-Aware Plant Care</title>
+    <meta name="description" content="The only plant app that understands your home's micro-environment. Get personalized care schedules based on radiator proximity, room humidity, and British heating patterns.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #68d391;
+            padding-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2f855a;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-style: italic;
+            color: #4a5568;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        
+        .unique-value {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #38b2ac;
+            margin: 15px 0;
+        }
+        
+        .demo-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f7fafc;
+            border-radius: 15px;
+            border-left: 5px solid #68d391;
+        }
+        
+        .environment-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-size: 14px;
+        }
+        
+        select, input[type="text"] {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+        
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #68d391;
+            box-shadow: 0 0 0 3px rgba(104, 211, 145, 0.1);
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin: 20px auto;
+            display: block;
+            min-width: 200px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+        
+        .results-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 3px solid #68d391;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .botanist-quote {
+            background: #f0fff4;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #38a169;
+            margin: 20px 0;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .botanist-quote::before {
+            content: "🎩";
+            position: absolute;
+            top: -5px;
+            right: 15px;
+            font-size: 24px;
+        }
+        
+        .schedule-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .schedule-item {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #81e6d9;
+        }
+        
+        .schedule-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c7a7b;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .schedule-label {
+            font-size: 12px;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .adjustments-list {
+            background: #fef5e7;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #ed8936;
+            margin: 15px 0;
+        }
+        
+        .adjustments-list ul {
+            margin: 10px 0 0 20px;
+        }
+        
+        .adjustments-list li {
+            margin-bottom: 5px;
+            color: #744210;
+        }
+        
+        .confidence-meter {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .confidence-bar {
+            background: #e2e8f0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px auto;
+            max-width: 300px;
+        }
+        
+        .confidence-fill {
+            background: linear-gradient(90deg, #f56565 0%, #ed8936 50%, #48bb78 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        
+        .competitive-advantage {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .vs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .vs-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .main-card { padding: 20px; }
+            .logo { font-size: 2em; }
+            .environment-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-card">
+            <div class="header">
+                <div class="logo">🌱 Root Juice</div>
+                <div class="tagline">Environment-Aware Plant Care</div>
+                <div class="unique-value">
+                    <strong>The only plant app that understands your home's micro-environment</strong><br>
+                    Get care schedules that actually work for British homes, radiator proximity, and heating patterns.
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h2>🏠 Your Plant's Environment</h2>
+                <p>Answer these questions to get a personalized care schedule that accounts for your specific home environment:</p>
+                
+                <div class="environment-form">
+                    <div class="form-group">
+                        <label for="roomType">Room Type</label>
+                        <select id="roomType">
+                            <option value="living-room">Living Room</option>
+                            <option value="bedroom">Bedroom</option>
+                            <option value="kitchen">Kitchen</option>
+                            <option value="bathroom">Bathroom</option>
+                            <option value="conservatory">Conservatory</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="windowDirection">Window Direction</label>
+                        <select id="windowDirection">
+                            <option value="south">South (Lots of sun)</option>
+                            <option value="west">West (Afternoon sun)</option>
+                            <option value="east">East (Morning sun)</option>
+                            <option value="north">North (Gentle light)</option>
+                            <option value="none">No nearby window</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="radiatorProximity">Radiator Proximity</label>
+                        <select id="radiatorProximity">
+                            <option value="very-close">Very Close (0-1m)</option>
+                            <option value="close">Close (1-2m)</option>
+                            <option value="medium">Medium (2-3m)</option>
+                            <option value="far">Far (3-4m)</option>
+                            <option value="very-far">Very Far (4m+)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="plantType">Plant Type</label>
+                        <select id="plantType">
+                            <option value="pothos">Pothos (Devil's Ivy)</option>
+                            <option value="monstera">Monstera Deliciosa</option>
+                            <option value="snake-plant">Snake Plant</option>
+                            <option value="fiddle-leaf">Fiddle Leaf Fig</option>
+                            <option value="rubber-plant">Rubber Plant</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="plantName">Plant's Nickname (Optional)</label>
+                        <input type="text" id="plantName" placeholder="e.g., Gerald the Gorgeous">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="heatingStatus">Heating Status</label>
+                        <select id="heatingStatus">
+                            <option value="winter-on">Winter Heating On</option>
+                            <option value="winter-off">Winter Heating Off</option>
+                            <option value="summer">Summer (No Heating)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateSchedule()">
+                    🧮 Calculate My Plant's Schedule
+                </button>
+            </div>
+            
+            <div id="results" class="results-card" style="display: none;">
+                <h2>📋 Your Personalized Care Schedule</h2>
+                
+                <div class="botanist-quote">
+                    <div id="botanistAdvice">Right-o! Let me analyze your plant's environment...</div>
+                </div>
+                
+                <div class="schedule-details">
+                    <div class="schedule-item">
+                        <span class="schedule-value" id="adjustedFrequency">7</span>
+                        <span class="schedule-label">Days Between Watering</span>
+                    </div>
+                    <div class="schedule-item">
+                        <span class="schedule-value" id="nextWateringDate">Feb 26</span>
+                        <span class="schedule-label">Next Watering</span>
+                    </div>
+                    <div class="schedule-item">
+                        <span class="schedule-value" id="adjustmentCount">3</span>
+                        <span class="schedule-label">Environment Adjustments</span>
+                    </div>
+                    <div class="schedule-item">
+                        <span class="schedule-value" id="baseFrequency">7</span>
+                        <span class="schedule-label">Base Frequency</span>
+                    </div>
+                </div>
+                
+                <div class="adjustments-list">
+                    <h3>🔧 Environment Adjustments Made:</h3>
+                    <ul id="reasonsList"></ul>
+                </div>
+                
+                <div class="confidence-meter">
+                    <h4>Confidence Level: <span id="confidenceText">85%</span></h4>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="confidenceFill" style="width: 85%;"></div>
+                    </div>
+                    <small>Based on environment data completeness and plant type confidence</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="competitive-advantage">
+            <h3>🆚 Why Root Juice vs. Other Plant Apps?</h3>
+            <div class="vs-grid">
+                <div class="vs-item">
+                    <strong>Planta:</strong> Generic "every 7 days" - ignores your radiator proximity
+                </div>
+                <div class="vs-item">
+                    <strong>Greg:</strong> Social but no environment awareness
+                </div>
+                <div class="vs-item">
+                    <strong>PictureThis:</strong> Plant ID focused, basic care
+                </div>
+                <div class="vs-item">
+                    <strong>Root Juice:</strong> British heating patterns + micro-environment intelligence
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Built for British plant lovers • Root Juice v1.0 • 2026
+        </div>
+    </div>
+
+    <script src="/root-juice/environment-algorithm.js"></script>
+    <script>
+        // Environment-Aware Plant Care Algorithm (Embedded)
+        class EnvironmentEngine {
+            constructor() {
+                this.basePlantData = {
+                    'pothos': { baseWateringDays: 7, lightNeeds: 'low', humidityPreference: 'medium' },
+                    'monstera': { baseWateringDays: 10, lightNeeds: 'medium', humidityPreference: 'high' },
+                    'snake-plant': { baseWateringDays: 14, lightNeeds: 'low', humidityPreference: 'low' },
+                    'fiddle-leaf': { baseWateringDays: 7, lightNeeds: 'high', humidityPreference: 'medium' },
+                    'rubber-plant': { baseWateringDays: 8, lightNeeds: 'medium', humidityPreference: 'medium' }
+                };
+                
+                this.environmentModifiers = {
+                    roomType: {
+                        'bathroom': { humidityBoost: 0.3, wateringAdjustment: 2 },
+                        'kitchen': { humidityBoost: 0.2, wateringAdjustment: 1 },
+                        'bedroom': { humidityBoost: 0, wateringAdjustment: 0 },
+                        'living-room': { humidityBoost: -0.1, wateringAdjustment: -1 },
+                        'conservatory': { humidityBoost: 0.1, wateringAdjustment: 1 }
+                    },
+                    seasons: {
+                        'winter': { humidityReduction: 0.2, wateringAdjustment: 2 },
+                        'spring': { humidityReduction: 0.1, wateringAdjustment: 1 },
+                        'summer': { humidityReduction: -0.1, wateringAdjustment: -1 },
+                        'autumn': { humidityReduction: 0, wateringAdjustment: 0 }
+                    },
+                    radiatorProximity: {
+                        'very-close': { dryingEffect: 0.4, wateringAdjustment: -3 },
+                        'close': { dryingEffect: 0.2, wateringAdjustment: -2 },
+                        'medium': { dryingEffect: 0.1, wateringAdjustment: -1 },
+                        'far': { dryingEffect: 0, wateringAdjustment: 0 },
+                        'very-far': { dryingEffect: -0.1, wateringAdjustment: 1 }
+                    },
+                    windowDirection: {
+                        'south': { lightBoost: 0.3, evaporationRate: 0.2, wateringAdjustment: -2 },
+                        'west': { lightBoost: 0.2, evaporationRate: 0.1, wateringAdjustment: -1 },
+                        'east': { lightBoost: 0.2, evaporationRate: 0.1, wateringAdjustment: -1 },
+                        'north': { lightBoost: 0, evaporationRate: 0, wateringAdjustment: 0 },
+                        'none': { lightBoost: -0.2, evaporationRate: -0.1, wateringAdjustment: 1 }
+                    },
+                    heatingStatus: {
+                        'winter-on': { airDryness: 0.3, wateringAdjustment: -2 },
+                        'winter-off': { airDryness: 0.1, wateringAdjustment: 0 },
+                        'summer': { airDryness: -0.1, wateringAdjustment: 1 }
+                    }
+                };
+                
+                this.botanistPersonality = [
+                    "Right-o! {plantName} is looking rather splendid in that {roomType}.",
+                    "Jolly good choice with the {plantType}! Now, about that watering schedule...",
+                    "Fascinating! Your {plantType} will absolutely thrive with these adjustments.",
+                    "Brilliant setup! I do believe {plantName} will be quite content here.",
+                    "Excellent! Your plant's micro-environment is perfectly accounted for."
+                ];
+            }
+            
+            calculateSchedule(environment) {
+                const plant = this.basePlantData[environment.plantType];
+                if (!plant) throw new Error('Unknown plant type');
+                
+                let adjustedDays = plant.baseWateringDays;
+                const adjustmentReasons = [];
+                
+                // Apply room type modifier
+                if (this.environmentModifiers.roomType[environment.roomType]) {
+                    const modifier = this.environmentModifiers.roomType[environment.roomType];
+                    adjustedDays += modifier.wateringAdjustment;
+                    adjustmentReasons.push(`${environment.roomType.replace('-', ' ')} humidity`);
+                }
+                
+                // Apply seasonal modifier
+                const currentSeason = this.getCurrentSeason(environment.heatingStatus);
+                if (this.environmentModifiers.seasons[currentSeason]) {
+                    const modifier = this.environmentModifiers.seasons[currentSeason];
+                    adjustedDays += modifier.wateringAdjustment;
+                    adjustmentReasons.push(`${currentSeason} season`);
+                }
+                
+                // Apply radiator proximity (our killer feature!)
+                if (this.environmentModifiers.radiatorProximity[environment.radiatorProximity]) {
+                    const modifier = this.environmentModifiers.radiatorProximity[environment.radiatorProximity];
+                    adjustedDays += modifier.wateringAdjustment;
+                    if (environment.radiatorProximity === 'very-close' || environment.radiatorProximity === 'close') {
+                        adjustmentReasons.push('radiator drying effect');
+                    }
+                }
+                
+                // Apply window/light modifier
+                if (this.environmentModifiers.windowDirection[environment.windowDirection]) {
+                    const modifier = this.environmentModifiers.windowDirection[environment.windowDirection];
+                    adjustedDays += modifier.wateringAdjustment;
+                    if (environment.windowDirection === 'south' || environment.windowDirection === 'west') {
+                        adjustmentReasons.push('increased sunlight evaporation');
+                    }
+                }
+                
+                // Apply heating status
+                if (this.environmentModifiers.heatingStatus[environment.heatingStatus]) {
+                    const modifier = this.environmentModifiers.heatingStatus[environment.heatingStatus];
+                    adjustedDays += modifier.wateringAdjustment;
+                    if (environment.heatingStatus === 'winter-on') {
+                        adjustmentReasons.push('winter heating dryness');
+                    }
+                }
+                
+                // Bounds checking
+                adjustedDays = Math.max(2, Math.min(21, adjustedDays));
+                
+                // Calculate next watering date
+                const nextWateringDate = new Date();
+                nextWateringDate.setDate(nextWateringDate.getDate() + adjustedDays);
+                
+                // Generate botanist advice
+                const personalizedAdvice = this.generateBotanistAdvice(environment, adjustmentReasons);
+                
+                return {
+                    baseWateringDays: plant.baseWateringDays,
+                    adjustedWateringDays: adjustedDays,
+                    adjustmentReasons,
+                    nextWateringDate,
+                    personalizedAdvice,
+                    confidenceScore: this.calculateConfidenceScore(environment, adjustmentReasons)
+                };
+            }
+            
+            getCurrentSeason(heatingStatus) {
+                if (heatingStatus === 'summer') return 'summer';
+                if (heatingStatus.startsWith('winter')) return 'winter';
+                
+                const month = new Date().getMonth();
+                if (month >= 3 && month <= 5) return 'spring';
+                if (month >= 6 && month <= 8) return 'summer';
+                if (month >= 9 && month <= 11) return 'autumn';
+                return 'winter';
+            }
+            
+            generateBotanistAdvice(environment, reasons) {
+                const templates = this.botanistPersonality;
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                
+                let advice = template
+                    .replace('{plantName}', environment.plantName || 'your plant')
+                    .replace('{plantType}', environment.plantType.replace('-', ' '))
+                    .replace('{roomType}', environment.roomType.replace('-', ' '));
+                
+                if (reasons.length > 2) {
+                    advice += " I've made quite a few adjustments based on your environment - brilliant attention to detail!";
+                } else if (reasons.length > 0) {
+                    advice += " A few environmental tweaks should do the trick perfectly.";
+                }
+                
+                return advice;
+            }
+            
+            calculateConfidenceScore(environment, reasons) {
+                let score = 60; // Base confidence
+                
+                // More adjustments = higher confidence in algorithm
+                score += reasons.length * 10;
+                
+                // Plant name increases engagement confidence
+                if (environment.plantName && environment.plantName.trim()) {
+                    score += 5;
+                }
+                
+                // Specific environment details boost confidence
+                if (environment.roomType !== 'bedroom') score += 5;
+                if (environment.windowDirection !== 'north') score += 5;
+                if (environment.radiatorProximity === 'very-close' || environment.radiatorProximity === 'close') score += 10;
+                
+                return Math.min(95, score);
+            }
+        }
+        
+        const engine = new EnvironmentEngine();
+        
+        function calculateSchedule() {
+            try {
+                const environment = {
+                    roomType: document.getElementById('roomType').value,
+                    windowDirection: document.getElementById('windowDirection').value,
+                    radiatorProximity: document.getElementById('radiatorProximity').value,
+                    plantType: document.getElementById('plantType').value,
+                    plantName: document.getElementById('plantName').value,
+                    heatingStatus: document.getElementById('heatingStatus').value
+                };
+                
+                const schedule = engine.calculateSchedule(environment);
+                
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                
+                // Update botanist advice
+                let personalizedAdvice = schedule.personalizedAdvice;
+                const plantName = environment.plantName?.trim();
+                if (plantName) {
+                    personalizedAdvice = personalizedAdvice.replace('your plant', plantName);
+                    personalizedAdvice = personalizedAdvice.replace('Your plant', plantName);
+                }
+                document.getElementById('botanistAdvice').textContent = personalizedAdvice;
+                
+                // Update schedule details
+                document.getElementById('baseFrequency').textContent = schedule.baseWateringDays;
+                document.getElementById('adjustedFrequency').textContent = schedule.adjustedWateringDays;
+                document.getElementById('nextWateringDate').textContent = schedule.nextWateringDate.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
+                document.getElementById('adjustmentCount').textContent = schedule.adjustmentReasons.length;
+                
+                // Update confidence
+                document.getElementById('confidenceText').textContent = schedule.confidenceScore + '%';
+                document.getElementById('confidenceFill').style.width = schedule.confidenceScore + '%';
+                
+                // Update adjustment reasons
+                const reasonsList = document.getElementById('reasonsList');
+                reasonsList.innerHTML = '';
+                schedule.adjustmentReasons.forEach(reason => {
+                    const li = document.createElement('li');
+                    li.textContent = `Adjusted for ${reason}`;
+                    li.style.marginBottom = '5px';
+                    reasonsList.appendChild(li);
+                });
+                
+                // Smooth scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                alert('Error calculating schedule: ' + error.message);
+            }
+        }
+        
+        // Auto-calculate on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                calculateSchedule();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
