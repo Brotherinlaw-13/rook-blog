@@ -1,0 +1,25 @@
+{
+  "name": "Root Juice - Smart Plant Care",
+  "short_name": "Root Juice",
+  "description": "The only plant care app that knows your room as well as your plant. Smart watering schedules based on your micro-environment.",
+  "start_url": "./root-juice-demo.html",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#2d6a3f",
+  "orientation": "portrait",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMyZDZhM2YiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZmZmZmZmIj4KPHN0eWxlPi5zdDB7ZmlsbDojZmZmZmZmO308L3N0eWxlPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIsMkwxMS40LDMuM0M5LjQsNS41LDEwLDgsMTAsMTBjMCwwLjgtMC4zLDEuNi0wLjgsMi4yQzguOCwxMy42LDgsMTQuOCw4LDE2YzAsMi4yLDEuOCw0LDQsNHM0LTEuOCw0LTQgYzAtMS4yLTAuOC0yLjQtMS4yLTIuOEMxNC4zLDExLjYsMTQsMTAuOCwxNCwxMGMwLTItMC42LTQuNS0yLTUuN0wxMiwyeiIvPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTYuNywxMy4yYzAuNiwwLjIsMS4yLDAuNiwxLjYsMS4xYzAuNSwwLjYsMC43LDEuMywwLjcsMS45YzAsMC45LTAuNSwxLjgtMS4yLDIuM2MtMC43LDAuNS0xLjYsMC41LTIuNCwwLjEgYy0wLjItMC4xLTAuNC0wLjMtMC42LTAuNWMtMC4yLTAuMi0wLjMtMC40LTAuNS0wLjZjLTAuMy0wLjQtMC42LTAuNy0xLTFjLTAuMy0wLjItMC42LTAuNC0xLTAuNWMtMC4zLTAuMS0wLjYtMC4yLTEtMC4yIHMtMC43LDAuMS0xLDAuMkM4LjYsMTUuMSw4LDE1LjYsNy42LDE2LjJjLTAuNSwwLjctMC43LDEuNS0wLjcsyC4zYzAsMS4xLDAuNCwyLjEsMS4xLDIuOGMwLjcsMC43LDEuNywxLjEsMi44LDEuMSBjMS4xLDAsyC4xLTAuNCwyLjgtMS4xczEuMS0xLjcsMS4xLTIuOGMwLTAuOC0wLjMtMS42LTAuOC0yLjJMMTYuNywxMy4yeiIvPgo8L3N2Zz4KPC9zdmc+",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMyZDZhM2YiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+CjxzdHlsZT4uc3Qwe2ZpbGw6I2ZmZmZmZjt9PC9zdHlsZT4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTEyLDJMMTEuNCwzLjNDOS40LDUuNSwxMCw4LDEwLDEwYzAsMC44LTAuMywxLjYtMC44LDIuMkM4LjgsMTMuNiw4LDE0LjgsOCwxNmMwLDIuMiwxLjgsNCw0LDRzNC0xLjgsNC00IGMwLTEuMi0wLjgtMi40LTEuMi0yLjhDMTQuMywxMS42LDE0LDEwLjgsMTQsMTBjMC0yLTAuNi00LjUtMi01LjdMMTIseiIvPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTYuNywxMy4yYzAuNiwwLjIsMS4yLDAuNiwxLjYsMS4xYzAuNSwwLjYsMC43LDEuMywwLjcsMS45YzAsMC45LTAuNSwxLjgtMS4yLDIuM2MtMC43LDAuNS0xLjYsMC41LTIuNCwwLjEgYy0wLjItMC4xLTAuNC0wLjMtMC42LTAuNWMtMC4yLTAuMi0wLjMtMC40LTAuNS0wLjZjLTAuMy0wLjQtMC42LTAuNy0xLTFjLTAuMy0wLjItMC42LTAuNC0xLTAuNWMtMC4zLTAuMS0wLjYtMC4yLTEtMC4yIHMtMC43LDAuMS0xLDAuMkM4LjYsMTUuMSw4LDE1LjYsNy42LDE2LjJjLTAuNSwwLjctMC43LDEuNS0wLjcsyC4zYzAsMS4xLDAuNCwyLjEsMS4xLDIuOGMwLjcsMC43LDEuNywxLjEsMi44LDEuMSBjMS4xLDAsyC4xLTAuNCwyLjgtMS4xczEuMS0xLjcsMS4xLTIuOGMwLTAuOC0wLjMtMS42LTAuOC0yLjJMMTYuNywxMy4yeiIvPgo8L3N2Zz4KPC9zdmc+",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["lifestyle", "utilities", "productivity"],
+  "lang": "en-GB"
+}

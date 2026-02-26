@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root Juice v2 - Your Plant Collection</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            max-width: 1000px; margin: 0 auto; padding: 20px; background: #f8f9fa; 
+        }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #2d6a3f; margin: 0; font-size: 2.2em; }
+        .subtitle { color: #6c757d; font-size: 1.1em; margin-top: 10px; }
+        
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; }
+        .tab { padding: 12px 24px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 600; }
+        .tab.active { border-bottom-color: #2d6a3f; color: #2d6a3f; }
+        .tab:hover { background: #f8f9fa; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .plant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .plant-card { 
+            background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 12px; 
+            padding: 20px; transition: all 0.2s ease; 
+        }
+        .plant-card:hover { border-color: #2d6a3f; transform: translateY(-2px); }
+        .plant-name { font-size: 1.3em; font-weight: 600; color: #2d6a3f; margin: 0 0 10px 0; }
+        .plant-type { color: #6c757d; font-size: 0.9em; text-transform: capitalize; margin-bottom: 15px; }
+        .watering-schedule { 
+            background: #e8f5e8; padding: 12px; border-radius: 8px; margin: 15px 0;
+            border-left: 4px solid #2d6a3f; 
+        }
+        .next-watering { font-weight: 600; color: #2d6a3f; }
+        .last-watered { color: #6c757d; font-size: 0.9em; margin-top: 5px; }
+        .plant-actions { margin-top: 15px; display: flex; gap: 10px; }
+        .btn-small { 
+            padding: 6px 12px; border: 1px solid #2d6a3f; background: white; color: #2d6a3f;
+            border-radius: 6px; cursor: pointer; font-size: 0.8em; transition: all 0.2s;
+        }
+        .btn-small:hover { background: #2d6a3f; color: white; }
+        .btn-danger { border-color: #dc3545; color: #dc3545; }
+        .btn-danger:hover { background: #dc3545; color: white; }
+        
+        .add-plant-btn { 
+            background: #2d6a3f; color: white; border: none; padding: 15px 30px; 
+            border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 20px;
+        }
+        .add-plant-btn:hover { background: #245530; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #495057; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #2d6a3f; }
+        
+        .calculate-btn { 
+            background: #2d6a3f; color: white; border: none; padding: 15px 30px; 
+            border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; width: 100%; margin: 20px 0; 
+        }
+        .calculate-btn:hover { background: #245530; }
+        
+        .result { background: #e8f5e8; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; }
+        .result h3 { color: #2d6a3f; margin-top: 0; }
+        
+        .empty-state { text-align: center; padding: 40px; color: #6c757d; }
+        .empty-state h3 { color: #495057; margin-bottom: 15px; }
+        
+        .botanist-quote { 
+            background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; 
+            font-style: italic; margin: 15px 0; border-radius: 0 8px 8px 0; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 Root Juice</h1>
+            <div class="subtitle">Your Intelligent Plant Collection Manager</div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('collection')">My Plants</div>
+            <div class="tab" onclick="switchTab('add')">Add New Plant</div>
+        </div>
+        
+        <div id="collection-tab" class="tab-content active">
+            <div id="plants-container">
+                <div class="empty-state">
+                    <h3>🌿 Your plant collection is empty</h3>
+                    <p>Add your first plant using the "Add New Plant" tab to start tracking watering schedules with our micro-environment intelligence.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="add-tab" class="tab-content">
+            <h2>Add a New Plant</h2>
+            <form id="plantForm">
+                <div class="form-group">
+                    <label for="plantNickname">Plant Nickname:</label>
+                    <input type="text" id="plantNickname" placeholder="e.g. 'Charlie', 'Kitchen Monstera', 'Bathroom Snake'">
+                </div>
+                
+                <div class="form-group">
+                    <label for="plantType">Plant Type:</label>
+                    <select id="plantType">
+                        <option value="monstera">Monstera Deliciosa</option>
+                        <option value="pothos">Pothos</option>
+                        <option value="sansevieria">Snake Plant (Sansevieria)</option>
+                        <option value="fiddle_leaf">Fiddle Leaf Fig</option>
+                        <option value="spider_plant">Spider Plant</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="humidity">Room Humidity:</label>
+                    <select id="humidity">
+                        <option value="">Not sure</option>
+                        <option value="low">Low (feels dry, especially in winter)</option>
+                        <option value="normal">Normal (comfortable)</option>
+                        <option value="high">High (bathroom, humid kitchen)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="radiatorDistance">Distance from Radiator:</label>
+                    <select id="radiatorDistance">
+                        <option value="">No radiator nearby</option>
+                        <option value="very_near">Very close (within 50cm)</option>
+                        <option value="near">Nearby (within 1-2 meters)</option>
+                        <option value="far">Far from any radiator</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="heatingSeason">Currently Heating Season?</label>
+                    <select id="heatingSeason">
+                        <option value="true">Yes (heating is on regularly)</option>
+                        <option value="false">No (spring/summer, minimal heating)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="windowDirection">Nearest Window Faces:</label>
+                    <select id="windowDirection">
+                        <option value="">Not sure</option>
+                        <option value="south">South (brightest)</option>
+                        <option value="west">West (afternoon sun)</option>
+                        <option value="east">East (morning sun)</option>
+                        <option value="north">North (least sun)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="windowDistance">Distance from Window:</label>
+                    <select id="windowDistance">
+                        <option value="">Not sure</option>
+                        <option value="near">Near window (within 2 meters)</option>
+                        <option value="far">Far from window (across room)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="potDrainage">Pot Drainage:</label>
+                    <select id="potDrainage">
+                        <option value="good">Good (holes in bottom, drains well)</option>
+                        <option value="poor">Poor (no drainage holes, water sits)</option>
+                    </select>
+                </div>
+
+                <button type="button" class="calculate-btn" onclick="addPlant()">
+                    Add Plant to Collection
+                </button>
+            </form>
+            
+            <div id="result" class="result">
+                <h3>Watering Schedule Calculated</h3>
+                <div id="schedule"></div>
+                <div id="botanistQuote" class="botanist-quote"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="root-juice-environment-algorithm.js"></script>
+    <script>
+        class PlantCollection {
+            constructor() {
+                this.plants = this.loadPlants();
+                this.algorithm = new EnvironmentAlgorithm();
+            }
+
+            loadPlants() {
+                const saved = localStorage.getItem('rootJuicePlants');
+                return saved ? JSON.parse(saved) : [];
+            }
+
+            savePlants() {
+                localStorage.setItem('rootJuicePlants', JSON.stringify(this.plants));
+            }
+
+            addPlant(plantData) {
+                const plant = {
+                    id: Date.now().toString(),
+                    nickname: plantData.nickname,
+                    type: plantData.type,
+                    environment: plantData.environment,
+                    schedule: null,
+                    lastWatered: null,
+                    nextWatering: null,
+                    addedDate: new Date().toISOString()
+                };
+
+                // Calculate watering schedule
+                try {
+                    plant.schedule = this.algorithm.calculateWateringSchedule(plant.type, plant.environment);
+                    plant.nextWatering = this.calculateNextWatering(plant.schedule.waterEveryDays);
+                } catch (error) {
+                    console.error('Error calculating schedule:', error);
+                    return false;
+                }
+
+                this.plants.push(plant);
+                this.savePlants();
+                return plant;
+            }
+
+            calculateNextWatering(dayInterval) {
+                const now = new Date();
+                now.setDate(now.getDate() + dayInterval);
+                return now.toISOString().split('T')[0]; // YYYY-MM-DD format
+            }
+
+            waterPlant(plantId) {
+                const plant = this.plants.find(p => p.id === plantId);
+                if (plant) {
+                    plant.lastWatered = new Date().toISOString().split('T')[0];
+                    plant.nextWatering = this.calculateNextWatering(plant.schedule.waterEveryDays);
+                    this.savePlants();
+                    return true;
+                }
+                return false;
+            }
+
+            deletePlant(plantId) {
+                this.plants = this.plants.filter(p => p.id !== plantId);
+                this.savePlants();
+            }
+
+            getDaysUntilWatering(nextWateringDate) {
+                const today = new Date().toISOString().split('T')[0];
+                const nextDate = new Date(nextWateringDate);
+                const todayDate = new Date(today);
+                const diffTime = nextDate - todayDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays;
+            }
+        }
+
+        const collection = new PlantCollection();
+
+        function switchTab(tabName) {
+            // Update tab styling
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            if (tabName === 'collection') {
+                renderPlants();
+            }
+        }
+
+        function addPlant() {
+            const form = document.getElementById('plantForm');
+            const plantData = {
+                nickname: document.getElementById('plantNickname').value || 'Unnamed Plant',
+                type: document.getElementById('plantType').value,
+                environment: {
+                    humidity: document.getElementById('humidity').value || null,
+                    radiatorDistance: document.getElementById('radiatorDistance').value || null,
+                    heatingSeason: document.getElementById('heatingSeason').value === 'true',
+                    windowDirection: document.getElementById('windowDirection').value || null,
+                    windowDistance: document.getElementById('windowDistance').value || null,
+                    potDrainage: document.getElementById('potDrainage').value || 'good',
+                    tempVariability: 'low'
+                }
+            };
+
+            const plant = collection.addPlant(plantData);
+            if (plant) {
+                // Show success result
+                const explanation = collection.algorithm.generateBotanistExplanation(plant.schedule, plant.type);
+                
+                document.getElementById('schedule').innerHTML = 
+                    `<strong>${plant.nickname}</strong> needs watering every <strong>${plant.schedule.waterEveryDays} days</strong>`;
+                document.getElementById('botanistQuote').innerHTML = 
+                    `<strong>From your British botanist:</strong><br>"${explanation}"`;
+                document.getElementById('result').style.display = 'block';
+                
+                // Reset form
+                form.reset();
+                
+                // Switch to collection tab after 3 seconds
+                setTimeout(() => {
+                    switchTab('collection');
+                    document.getElementById('result').style.display = 'none';
+                }, 3000);
+            } else {
+                alert('Error adding plant. Please try again.');
+            }
+        }
+
+        function renderPlants() {
+            const container = document.getElementById('plants-container');
+            
+            if (collection.plants.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>🌿 Your plant collection is empty</h3>
+                        <p>Add your first plant using the "Add New Plant" tab to start tracking watering schedules with our micro-environment intelligence.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const plantNames = {
+                'monstera': 'Monstera Deliciosa',
+                'pothos': 'Pothos',
+                'sansevieria': 'Snake Plant',
+                'fiddle_leaf': 'Fiddle Leaf Fig',
+                'spider_plant': 'Spider Plant'
+            };
+
+            container.innerHTML = `
+                <div class="plant-grid">
+                    ${collection.plants.map(plant => {
+                        const daysUntil = collection.getDaysUntilWatering(plant.nextWatering);
+                        const urgency = daysUntil <= 0 ? 'overdue' : daysUntil <= 1 ? 'urgent' : 'normal';
+                        
+                        let wateringText = '';
+                        if (daysUntil < 0) {
+                            wateringText = `<span style="color: #dc3545; font-weight: bold;">Overdue by ${Math.abs(daysUntil)} day(s)!</span>`;
+                        } else if (daysUntil === 0) {
+                            wateringText = `<span style="color: #ffc107; font-weight: bold;">Water today!</span>`;
+                        } else if (daysUntil === 1) {
+                            wateringText = `<span style="color: #fd7e14; font-weight: bold;">Water tomorrow</span>`;
+                        } else {
+                            wateringText = `Water in ${daysUntil} days`;
+                        }
+
+                        return `
+                            <div class="plant-card">
+                                <h3 class="plant-name">${plant.nickname}</h3>
+                                <div class="plant-type">${plantNames[plant.type] || plant.type}</div>
+                                <div class="watering-schedule">
+                                    <div class="next-watering">${wateringText}</div>
+                                    <div class="schedule-info">Every ${plant.schedule.waterEveryDays} days</div>
+                                    ${plant.lastWatered ? 
+                                        `<div class="last-watered">Last watered: ${plant.lastWatered}</div>` : 
+                                        '<div class="last-watered">Never watered</div>'
+                                    }
+                                </div>
+                                <div class="plant-actions">
+                                    <button class="btn-small" onclick="waterPlant('${plant.id}')">💧 Watered</button>
+                                    <button class="btn-small btn-danger" onclick="deletePlant('${plant.id}')">🗑️ Remove</button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function waterPlant(plantId) {
+            if (collection.waterPlant(plantId)) {
+                renderPlants();
+            }
+        }
+
+        function deletePlant(plantId) {
+            if (confirm('Are you sure you want to remove this plant from your collection?')) {
+                collection.deletePlant(plantId);
+                renderPlants();
+            }
+        }
+
+        // Initial render
+        renderPlants();
+    </script>
+</body>
+</html>
