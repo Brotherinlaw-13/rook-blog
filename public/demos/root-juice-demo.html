@@ -143,11 +143,18 @@
                 <h4>💾 Save to My Collection</h4>
                 <input type="text" id="plantName" class="plant-name-input" placeholder="Give your plant a name (e.g., 'Kitchen Monstera')">
                 <button type="button" class="save-btn" onclick="savePlant()">Save Plant</button>
+                <div id="notificationPrompt" style="margin-top: 10px; display: none;">
+                    <small>💡 Enable notifications to get watering reminders?</small>
+                    <button type="button" class="save-btn" style="padding: 6px 12px; font-size: 0.9em;" onclick="requestNotificationPermission()">Enable Reminders</button>
+                </div>
             </div>
         </div>
 
         <div id="savedPlants" style="display: none;">
-            <h2>🌿 My Plant Collection</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;">🌿 My Plant Collection</h2>
+                <div id="notificationStatus" style="font-size: 0.9em; color: #6c757d;"></div>
+            </div>
             <div id="plantLibrary"></div>
         </div>
 
@@ -167,7 +174,57 @@
         // Load saved plants on page load
         window.onload = function() {
             loadPlantCollection();
+            checkNotificationPermission();
+            checkForOverduePlants();
         };
+
+        function checkNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                // Don't auto-request - let user trigger it when they save a plant
+            }
+        }
+
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    document.getElementById('notificationPrompt').style.display = 'none';
+                    if (permission === 'granted') {
+                        alert('Great! You\'ll now get reminders when your plants need water. 🔔');
+                        loadPlantCollection(); // Refresh to show notification status
+                    } else {
+                        alert('No worries! You can still track your plants manually.');
+                    }
+                });
+            }
+        }
+
+        function checkForOverduePlants() {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                const savedPlants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
+                
+                savedPlants.forEach(plant => {
+                    if (plant.lastWatered) {
+                        const daysSinceWatered = Math.floor((Date.now() - new Date(plant.lastWatered)) / (1000 * 60 * 60 * 24));
+                        
+                        if (daysSinceWatered >= plant.schedule.waterEveryDays) {
+                            // Check if we've already notified today
+                            const lastNotified = localStorage.getItem(`lastNotified_${plant.id}`);
+                            const today = new Date().toDateString();
+                            
+                            if (lastNotified !== today) {
+                                new Notification('🌱 Root Juice Reminder', {
+                                    body: `${plant.name} needs water! (${daysSinceWatered} days since last watering)`,
+                                    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzJkNmEzZiI+PHBhdGggZD0iTTEyIDJsLS41NjcgMS4yOEM5LjQgNS41IDEwIDggMTAgMTBjMCAuODQ0LS4yNjYgMS42NC0uNzU5IDIuMjQxQzguNzU5IDEzLjY0IDggMTQuODQ0IDggMTZjMCAyLjIwNyAxLjc5MyA0IDQgNHM0LTEuNzkzIDQtNGMwLTEuMTU2LS43NTktMi4zNi0xLjI0MS0yLjc1OUM0Mi43MzQgMTEuNjQgMTQgMTAuODQ0IDE0IDEwYzAtMi0uNi00LjUtMi01LjcyTDEyIDJ6Ii8+PC9zdmc+',
+                                    tag: `plant_${plant.id}`
+                                });
+                                
+                                localStorage.setItem(`lastNotified_${plant.id}`, today);
+                            }
+                        }
+                    }
+                });
+            }
+        }
 
         function calculateSchedule() {
             const algorithm = new EnvironmentAlgorithm();
@@ -263,6 +320,11 @@
             // Refresh the plant collection display
             loadPlantCollection();
             
+            // Show notification prompt if not already granted
+            if ('Notification' in window && Notification.permission === 'default') {
+                document.getElementById('notificationPrompt').style.display = 'block';
+            }
+            
             alert(`${plantName} saved to your collection! 🌱`);
         }
 
@@ -275,6 +337,22 @@
             }
 
             document.getElementById('savedPlants').style.display = 'block';
+            
+            // Update notification status
+            const statusEl = document.getElementById('notificationStatus');
+            if ('Notification' in window) {
+                if (Notification.permission === 'granted') {
+                    statusEl.innerHTML = '🔔 Reminders enabled';
+                    statusEl.style.color = '#28a745';
+                } else if (Notification.permission === 'denied') {
+                    statusEl.innerHTML = '🔕 Reminders blocked';
+                    statusEl.style.color = '#dc3545';
+                } else {
+                    statusEl.innerHTML = '💬 <a href="#" onclick="requestNotificationPermission(); return false;" style="color: #007bff;">Enable reminders</a>';
+                }
+            } else {
+                statusEl.innerHTML = '';
+            }
             
             const plantNames = {
                 'monstera': 'Monstera Deliciosa',
