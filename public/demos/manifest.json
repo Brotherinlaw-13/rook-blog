@@ -1,25 +1,58 @@
 {
-  "name": "Root Juice - Smart Plant Care",
+  "name": "Root Juice - Plant Care Assistant",
   "short_name": "Root Juice",
-  "description": "The only plant care app that knows your room as well as your plant. Smart watering schedules based on your micro-environment.",
+  "description": "Micro-environment plant care algorithm that knows your room as well as your plant",
   "start_url": "./root-juice-demo.html",
   "display": "standalone",
   "background_color": "#f8f9fa",
   "theme_color": "#2d6a3f",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "scope": "./",
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMyZDZhM2YiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZmZmZmZmIj4KPHN0eWxlPi5zdDB7ZmlsbDojZmZmZmZmO308L3N0eWxlPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIsMkwxMS40LDMuM0M5LjQsNS41LDEwLDgsMTAsMTBjMCwwLjgtMC4zLDEuNi0wLjgsMi4yQzguOCwxMy42LDgsMTQuOCw4LDE2YzAsMi4yLDEuOCw0LDQsNHM0LTEuOCw0LTQgYzAtMS4yLTAuOC0yLjQtMS4yLTIuOEMxNC4zLDExLjYsMTQsMTAuOCwxNCwxMGMwLTItMC42LTQuNS0yLTUuN0wxMiwyeiIvPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTYuNywxMy4yYzAuNiwwLjIsMS4yLDAuNiwxLjYsMS4xYzAuNSwwLjYsMC43LDEuMywwLjcsMS45YzAsMC45LTAuNSwxLjgtMS4yLDIuM2MtMC43LDAuNS0xLjYsMC41LTIuNCwwLjEgYy0wLjItMC4xLTAuNC0wLjMtMC42LTAuNWMtMC4yLTAuMi0wLjMtMC40LTAuNS0wLjZjLTAuMy0wLjQtMC42LTAuNy0xLTFjLTAuMy0wLjItMC42LTAuNC0xLTAuNWMtMC4zLTAuMS0wLjYtMC4yLTEtMC4yIHMtMC43LDAuMS0xLDAuMkM4LjYsMTUuMSw4LDE1LjYsNy42LDE2LjJjLTAuNSwwLjctMC43LDEuNS0wLjcsyC4zYzAsMS4xLDAuNCwyLjEsMS4xLDIuOGMwLjcsMC43LDEuNywxLjEsMi44LDEuMSBjMS4xLDAsyC4xLTAuNCwyLjgtMS4xczEuMS0xLjcsMS4xLTIuOGMwLTAuOC0wLjMtMS42LTAuOC0yLjJMMTYuNywxMy4yeiIvPgo8L3N2Zz4KPC9zdmc+",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiMyZDZhM2YiLz4KPHN2ZyB4PSIyMCIgeT0iMTYiIHdpZHRoPSIyNCIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN0ZW0geDE9IjEyIiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPHN0ZW0geDE9IjQiIHkxPSIyMCIgeDI9IjEyIiB5Mj0iMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8c3RlbSB4MT0iMjAiIHkxPSIyMCIgeDI9IjEyIiB5Mj0iMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0IiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjY0IiBjeT0iNjQiIHI9IjY0IiBmaWxsPSIjMmQ2YTNmIi8+CjxzdmcgeD0iNDAiIHk9IjMyIiB3aWR0aD0iNDgiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxzdGVtIHgxPSIxMiIgeTE9IjIwIiB4Mj0iMTIiIHkyPSIxNCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxzdGVtIHgxPSI0IiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiLz4KPHN0ZW0geDE9IjIwIiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiLz4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMCIgcj0iNiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPg==",
+      "sizes": "128x128",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9Ijk2IiBmaWxsPSIjMmQ2YTNmIi8+CjxzdmcgeD0iNjAiIHk9IjQ4IiB3aWR0aD0iNzIiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxzdGVtIHgxPSIxMiIgeTE9IjIwIiB4Mj0iMTIiIHkyPSIxNCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxzdGVtIHgxPSI0IiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiLz4KPHN0ZW0geDE9IjIwIiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiLz4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMCIgcj0iOCIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPg==",
       "sizes": "192x192",
       "type": "image/svg+xml"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMyZDZhM2YiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+CjxzdHlsZT4uc3Qwe2ZpbGw6I2ZmZmZmZjt9PC9zdHlsZT4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTEyLDJMMTEuNCwzLjNDOS40LDUuNSwxMCw4LDEwLDEwYzAsMC44LTAuMywxLjYtMC44LDIuMkM4LjgsMTMuNiw4LDE0LjgsOCwxNmMwLDIuMiwxLjgsNCw0LDRzNC0xLjgsNC00IGMwLTEuMi0wLjgtMi40LTEuMi0yLjhDMTQuMywxMS42LDE0LDEwLjgsMTQsMTBjMC0yLTAuNi00LjUtMi01LjdMMTIseiIvPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTYuNywxMy4yYzAuNiwwLjIsMS4yLDAuNiwxLjYsMS4xYzAuNSwwLjYsMC43LDEuMywwLjcsMS45YzAsMC45LTAuNSwxLjgtMS4yLDIuM2MtMC43LDAuNS0xLjYsMC41LTIuNCwwLjEgYy0wLjItMC4xLTAuNC0wLjMtMC42LTAuNWMtMC4yLTAuMi0wLjMtMC40LTAuNS0wLjZjLTAuMy0wLjQtMC42LTAuNy0xLTFjLTAuMy0wLjItMC42LTAuNC0xLTAuNWMtMC4zLTAuMS0wLjYtMC4yLTEtMC4yIHMtMC43LDAuMS0xLDAuMkM4LjYsMTUuMSw4LDE1LjYsNy42LDE2LjJjLTAuNSwwLjctMC43LDEuNS0wLjcsyC4zYzAsMS4xLDAuNCwyLjEsMS4xLDIuOGMwLjcsMC43LDEuNywxLjEsMi44LDEuMSBjMS4xLDAsyC4xLTAuNCwyLjgtMS4xczEuMS0xLjcsMS4xLTIuOGMwLTAuOC0wLjMtMS42LTAuOC0yLjJMMTYuNywxMy4yeiIvPgo8L3N2Zz4KPC9zdmc+",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjU2IiBmaWxsPSIjMmQ2YTNmIi8+CjxzdmcgeD0iMTYwIiB5PSIxMjgiIHdpZHRoPSIxOTIiIGhlaWdodD0iMjU2IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiPgo8c3RlbSB4MT0iMTIiIHkxPSIyMCIgeDI9IjEyIiB5Mj0iMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iOCIvPgo8c3RlbSB4MT0iNCIgeTE9IjIwIiB4Mj0iMTIiIHkyPSIxNCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxzdGVtIHgxPSIyMCIgeTE9IjIwIiB4Mj0iMTIiIHkyPSIxNCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjEwIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+",
       "sizes": "512x512",
       "type": "image/svg+xml"
     }
   ],
   "categories": ["lifestyle", "utilities", "productivity"],
-  "lang": "en-GB"
+  "shortcuts": [
+    {
+      "name": "Calculate Schedule",
+      "short_name": "Calculate",
+      "url": "./root-juice-demo.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDgiIGN5PSI0OCIgcj0iNDgiIGZpbGw9IiMyZDZhM2YiLz4KPHN2ZyB4PSIzMCIgeT0iMjQiIHdpZHRoPSIzNiIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN0ZW0geDE9IjEyIiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPHN0ZW0geDE9IjQiIHkxPSIyMCIgeDI9IjEyIiB5Mj0iMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8c3RlbSB4MT0iMjAiIHkxPSIyMCIgeDI9IjEyIiB5Mj0iMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0IiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "My Plants", 
+      "short_name": "Plants",
+      "url": "./root-juice-demo.html#plants",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDgiIGN5PSI0OCIgcj0iNDgiIGZpbGw9IiMyZDZhM2YiLz4KPHN2ZyB4PSIzMCIgeT0iMjQiIHdpZHRoPSIzNiIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN0ZW0geDE9IjEyIiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPHN0ZW0geDE9IjQiIHkxPSIyMCIgeDI9IjEyIiB5Mj0iMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8c3RlbSB4MT0iMjAiIHkxPSIyMCIgeDI9IjEyIiB5Mj0iMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0IiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
 }

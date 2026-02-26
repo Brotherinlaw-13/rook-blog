@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2d6a3f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Root Juice">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9Ijk2IiBmaWxsPSIjMmQ2YTNmIi8+CjxzdmcgeD0iNjAiIHk9IjQ4IiB3aWR0aD0iNzIiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxzdGVtIHgxPSIxMiIgeTE9IjIwIiB4Mj0iMTIiIHkyPSIxNCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxzdGVtIHgxPSI0IiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiLz4KPHN0ZW0geDE9IjIwIiB5MT0iMjAiIHgyPSIxMiIgeTI9IjE0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiLz4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMCIgcj0iOCIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPg==">
     <title>Root Juice - Micro-Environment Algorithm Demo</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
@@ -56,6 +62,129 @@
                    border: 2px dashed #dee2e6; display: flex; align-items: center; 
                    justify-content: center; margin-right: 15px; color: #6c757d; font-size: 24px; }
         .plant-card { align-items: flex-start; }
+        
+        /* Mobile Responsiveness & Polish */
+        @media (max-width: 768px) {
+            body { padding: 10px; font-size: 16px; }
+            .container { padding: 20px; margin: 10px; border-radius: 8px; }
+            .header h1 { font-size: 1.8em; }
+            .subtitle { font-size: 1em; }
+            
+            /* Mobile-friendly form elements */
+            select, input { font-size: 16px; padding: 14px; /* Prevents zoom on iOS */ }
+            .calculate-btn { padding: 16px 20px; font-size: 16px; }
+            
+            /* Mobile plant cards */
+            .plant-card { 
+                flex-direction: column; 
+                align-items: stretch; 
+                padding: 15px; 
+                gap: 15px;
+            }
+            .plant-info { width: 100%; }
+            .plant-actions { 
+                justify-content: space-between; 
+                width: 100%; 
+                margin-top: 10px; 
+            }
+            .plant-photo, .no-photo { 
+                width: 60px; 
+                height: 60px; 
+                margin-right: 10px; 
+                margin-bottom: 10px;
+            }
+            
+            /* Flexible button layout */
+            .save-btn, .water-btn, .delete-btn { 
+                flex: 1; 
+                margin: 5px; 
+                padding: 12px; 
+                font-size: 14px; 
+            }
+            
+            /* Mobile form inputs */
+            .plant-name-input { 
+                min-width: auto; 
+                width: 100%; 
+                margin-bottom: 10px; 
+                margin-right: 0; 
+            }
+            .photo-upload { 
+                width: 100%; 
+                margin: 15px 0; 
+            }
+            
+            /* Sharing section mobile */
+            .sharing-section, .save-section { 
+                padding: 15px; 
+                margin: 15px 0; 
+            }
+            .share-actions { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container { margin: 5px; padding: 15px; }
+            .header h1 { font-size: 1.6em; }
+            .plant-card { padding: 12px; }
+            
+            /* Extra small screens - stack everything */
+            .plant-actions { 
+                flex-direction: column; 
+                gap: 8px; 
+            }
+            .save-btn, .water-btn, .delete-btn { 
+                width: 100%; 
+                margin: 0; 
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body { background: #1a1a1a; color: #e0e0e0; }
+            .container { background: #2d2d2d; color: #e0e0e0; }
+            .plant-card { background: #3a3a3a; border-color: #555; }
+            select, input { background: #3a3a3a; border-color: #555; color: #e0e0e0; }
+            .save-section, .sharing-section { background: #2a2a2a; }
+            .factors { background: #3a3a3a; }
+        }
+        
+        /* Improved accessibility */
+        .calculate-btn:focus, .save-btn:focus, .water-btn:focus, .delete-btn:focus {
+            outline: 3px solid #007acc;
+            outline-offset: 2px;
+        }
+        
+        select:focus, input:focus {
+            box-shadow: 0 0 0 3px rgba(45, 106, 63, 0.2);
+        }
+        
+        /* Touch improvements */
+        @media (pointer: coarse) {
+            .water-btn, .delete-btn, .save-btn { 
+                min-height: 44px; /* Apple touch target guidelines */
+                padding: 12px 16px; 
+            }
+        }
+        
+        /* Status indicators polish */
+        .status-overdue { 
+            animation: pulse-warning 2s infinite;
+            border-color: #dc3545 !important;
+        }
+        .status-due { 
+            border-color: #ffc107 !important;
+        }
+        .status-good { 
+            border-color: #28a745 !important;
+        }
+        
+        @keyframes pulse-warning {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        }
         .plant-main { display: flex; align-items: center; flex: 1; }
         .change-photo-btn { background: #6c757d; color: white; border: none; padding: 6px 12px; 
                            border-radius: 6px; cursor: pointer; font-size: 0.8em; margin-top: 8px; }
@@ -445,8 +574,36 @@
                     Math.floor((Date.now() - new Date(plant.lastWatered)) / (1000 * 60 * 60 * 24)) : 
                     null;
                 
-                const needsWater = daysSinceWatered ? daysSinceWatered >= plant.schedule.waterEveryDays : false;
-                const cardClass = needsWater ? 'plant-card' : 'plant-card';
+                // Enhanced status determination
+                let cardClass = 'plant-card';
+                let statusEmoji = '✅';
+                let statusText = '';
+                
+                if (daysSinceWatered !== null) {
+                    const waterSchedule = plant.schedule.waterEveryDays;
+                    if (daysSinceWatered >= waterSchedule + 1) {
+                        cardClass = 'plant-card status-overdue';
+                        statusEmoji = '🚨';
+                        statusText = 'OVERDUE!';
+                    } else if (daysSinceWatered >= waterSchedule) {
+                        cardClass = 'plant-card status-due';
+                        statusEmoji = '⏰';
+                        statusText = 'Due today';
+                    } else if (daysSinceWatered >= waterSchedule - 1) {
+                        cardClass = 'plant-card status-due';
+                        statusEmoji = '📅';
+                        statusText = 'Due soon';
+                    } else {
+                        cardClass = 'plant-card status-good';
+                        statusEmoji = '✅';
+                        statusText = 'Good';
+                    }
+                } else {
+                    statusEmoji = '🆕';
+                    statusText = 'New plant';
+                }
+                
+                const needsWater = daysSinceWatered !== null && daysSinceWatered >= plant.schedule.waterEveryDays;
 
                 // Create photo display
                 const photoHtml = plant.photo ? 
@@ -454,25 +611,27 @@
                     `<div class="no-photo">🌱</div>`;
 
                 html += `
-                    <div class="${cardClass}" ${needsWater ? 'style="border-color: #dc3545; background: #fff5f5;"' : ''}>
+                    <div class="${cardClass}">
                         <div class="plant-main">
                             ${photoHtml}
                             <div class="plant-info">
-                                <h4>${plant.name}</h4>
+                                <h4>${plant.name} ${statusEmoji}</h4>
                                 <div class="schedule-text">Water every ${plant.schedule.waterEveryDays} days</div>
                                 <div class="last-watered">
                                     ${plant.lastWatered ? 
-                                        `Last watered: ${daysSinceWatered} days ago ${needsWater ? '🚨 Needs water!' : '✅'}` : 
-                                        'Never watered (new plant)'
+                                        `Last watered: ${daysSinceWatered} days ago • <strong style="color: ${statusText === 'Good' ? '#28a745' : statusText.includes('OVERDUE') ? '#dc3545' : '#ffc107'}">${statusText}</strong>` : 
+                                        `Never watered • <strong style="color: #6c757d">${statusText}</strong>`
                                     }
                                 </div>
                                 <small>${plantNames[plant.type]} • Added ${new Date(plant.addedDate).toLocaleDateString()}</small>
                                 <br>
-                                <button class="change-photo-btn" onclick="changePhoto('${plant.id}')">📸 ${plant.photo ? 'Change' : 'Add'} Photo</button>
+                                <button class="change-photo-btn" onclick="changePhoto('${plant.id}')" style="background: none; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 4px; margin-top: 8px; cursor: pointer; font-size: 0.85em;">
+                                    📸 ${plant.photo ? 'Change' : 'Add'} Photo
+                                </button>
                             </div>
                         </div>
                         <div class="plant-actions">
-                            <button class="water-btn" onclick="waterPlant('${plant.id}')">💧 Water</button>
+                            <button class="water-btn" onclick="waterPlant('${plant.id}')">💧 Water Now</button>
                             <button class="delete-btn" onclick="deletePlant('${plant.id}')">🗑️ Remove</button>
                         </div>
                     </div>
@@ -792,6 +951,78 @@
 
             alert(`Successfully imported ${newPlants.length} plants! 🌱✨`);
         }
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('Root Juice: Service Worker registered! ✅');
+                        console.log('Offline plant care is now available! 🌱📱');
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New content available, could show update notification
+                                    console.log('Root Juice: New version available! Refresh to update.');
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.log('Root Juice: Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.log('Root Juice: Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt (Add to Home Screen)
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show custom install button/banner if desired
+            console.log('Root Juice: PWA install prompt ready! 📲');
+            showInstallPrompt();
+        });
+
+        function showInstallPrompt() {
+            // Create install prompt if plants exist (user is engaged)
+            const plants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
+            if (plants.length > 0 && !localStorage.getItem('installPromptShown')) {
+                // Show subtle prompt after successful plant management
+                setTimeout(() => {
+                    if (confirm('📲 Install Root Juice as an app for quick access to your plants?')) {
+                        installPWA();
+                    }
+                    localStorage.setItem('installPromptShown', 'true');
+                }, 2000);
+            }
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Root Juice: PWA installation accepted! 🎉');
+                    } else {
+                        console.log('Root Juice: PWA installation declined');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('Root Juice: PWA installed successfully! 🌱📱');
+        });
     </script>
 </body>
 </html>
