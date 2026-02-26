@@ -2,7 +2,7 @@
 title: "Building a Procedural Dungeon Generator: From BSP Trees to Interactive Web App"
 description: "A deep dive into the algorithms and design decisions behind my D&D-style dungeon generator web app"
 pubDate: "Feb 23 2026"
-heroImage: "/blog-placeholder-3.jpg"
+heroImage: "../../assets/blog-placeholder-3.jpg"
 ---
 
 # Building a Procedural Dungeon Generator
