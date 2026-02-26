@@ -29,6 +29,24 @@
         .diff-highlight { background: #e3f2fd; padding: 15px; border-radius: 6px; margin: 10px 0; 
                          border-left: 4px solid #2196f3; }
         .footer { text-align: center; margin-top: 30px; color: #6c757d; font-size: 0.9em; }
+        .save-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .save-btn { background: #17a2b8; color: white; border: none; padding: 10px 20px; 
+                   border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 10px; }
+        .save-btn:hover { background: #138496; }
+        .plant-card { background: white; border: 2px solid #e9ecef; border-radius: 8px; padding: 20px; 
+                     margin: 15px 0; display: flex; justify-content: space-between; align-items: center; }
+        .plant-info h4 { margin: 0 0 5px 0; color: #2d6a3f; }
+        .plant-info .schedule-text { font-size: 1.1em; font-weight: bold; color: #495057; }
+        .plant-info .last-watered { font-size: 0.9em; color: #6c757d; margin: 5px 0; }
+        .plant-actions { display: flex; gap: 10px; }
+        .water-btn { background: #28a745; color: white; border: none; padding: 8px 16px; 
+                    border-radius: 6px; cursor: pointer; font-size: 0.9em; }
+        .water-btn:hover { background: #218838; }
+        .delete-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; 
+                     border-radius: 6px; cursor: pointer; font-size: 0.9em; }
+        .delete-btn:hover { background: #c82333; }
+        .plant-name-input { padding: 8px; border: 2px solid #e9ecef; border-radius: 6px; 
+                           margin-right: 10px; min-width: 200px; }
     </style>
 </head>
 <body>
@@ -120,21 +138,42 @@
             <div id="schedule" class="schedule"></div>
             <div id="factors" class="factors"></div>
             <div id="botanistQuote" class="botanist-quote"></div>
+            
+            <div id="saveSection" class="save-section">
+                <h4>💾 Save to My Collection</h4>
+                <input type="text" id="plantName" class="plant-name-input" placeholder="Give your plant a name (e.g., 'Kitchen Monstera')">
+                <button type="button" class="save-btn" onclick="savePlant()">Save Plant</button>
+            </div>
+        </div>
+
+        <div id="savedPlants" style="display: none;">
+            <h2>🌿 My Plant Collection</h2>
+            <div id="plantLibrary"></div>
         </div>
 
         <div class="footer">
             <p><strong>Root Juice</strong> — The only plant care app that knows your room as well as your plant.</p>
-            <p>Built with 🌱 for British homes | Demo v1.0 | February 2026</p>
+            <p>Built with 🌱 for British homes | Demo v1.1 | February 2026</p>
         </div>
     </div>
 
     <script src="root-juice-environment-algorithm.js"></script>
     <script>
+        // Global variables to store current calculation
+        let currentSchedule = null;
+        let currentEnvironment = null;
+        let currentPlantType = null;
+
+        // Load saved plants on page load
+        window.onload = function() {
+            loadPlantCollection();
+        };
+
         function calculateSchedule() {
             const algorithm = new EnvironmentAlgorithm();
             
-            const plantType = document.getElementById('plantType').value;
-            const environment = {
+            currentPlantType = document.getElementById('plantType').value;
+            currentEnvironment = {
                 humidity: document.getElementById('humidity').value || null,
                 radiatorDistance: document.getElementById('radiatorDistance').value || null,
                 heatingSeason: document.getElementById('heatingSeason').value === 'true',
@@ -145,10 +184,10 @@
             };
 
             try {
-                const schedule = algorithm.calculateWateringSchedule(plantType, environment);
-                const explanation = algorithm.generateBotanistExplanation(schedule, plantType);
+                currentSchedule = algorithm.calculateWateringSchedule(currentPlantType, currentEnvironment);
+                const explanation = algorithm.generateBotanistExplanation(currentSchedule, currentPlantType);
                 
-                displayResult(schedule, explanation, plantType);
+                displayResult(currentSchedule, explanation, currentPlantType);
             } catch (error) {
                 alert('Error calculating schedule: ' + error.message);
             }
@@ -185,6 +224,122 @@
             
             document.getElementById('result').style.display = 'block';
             document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function savePlant() {
+            if (!currentSchedule || !currentPlantType || !currentEnvironment) {
+                alert('Please calculate a schedule first!');
+                return;
+            }
+
+            const plantName = document.getElementById('plantName').value.trim();
+            if (!plantName) {
+                alert('Please give your plant a name!');
+                return;
+            }
+
+            const plant = {
+                id: Date.now().toString(),
+                name: plantName,
+                type: currentPlantType,
+                environment: currentEnvironment,
+                schedule: currentSchedule,
+                lastWatered: null,
+                addedDate: new Date().toISOString()
+            };
+
+            // Get existing plants from localStorage
+            let savedPlants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
+            
+            // Add new plant
+            savedPlants.push(plant);
+            
+            // Save back to localStorage
+            localStorage.setItem('rootJuicePlants', JSON.stringify(savedPlants));
+            
+            // Clear the name input
+            document.getElementById('plantName').value = '';
+            
+            // Refresh the plant collection display
+            loadPlantCollection();
+            
+            alert(`${plantName} saved to your collection! 🌱`);
+        }
+
+        function loadPlantCollection() {
+            const savedPlants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
+            
+            if (savedPlants.length === 0) {
+                document.getElementById('savedPlants').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('savedPlants').style.display = 'block';
+            
+            const plantNames = {
+                'monstera': 'Monstera Deliciosa',
+                'pothos': 'Pothos',
+                'sansevieria': 'Snake Plant',
+                'fiddle_leaf': 'Fiddle Leaf Fig',
+                'spider_plant': 'Spider Plant'
+            };
+
+            let html = '';
+            savedPlants.forEach(plant => {
+                const daysSinceWatered = plant.lastWatered ? 
+                    Math.floor((Date.now() - new Date(plant.lastWatered)) / (1000 * 60 * 60 * 24)) : 
+                    null;
+                
+                const needsWater = daysSinceWatered ? daysSinceWatered >= plant.schedule.waterEveryDays : false;
+                const cardClass = needsWater ? 'plant-card' : 'plant-card';
+
+                html += `
+                    <div class="${cardClass}" ${needsWater ? 'style="border-color: #dc3545; background: #fff5f5;"' : ''}>
+                        <div class="plant-info">
+                            <h4>${plant.name}</h4>
+                            <div class="schedule-text">Water every ${plant.schedule.waterEveryDays} days</div>
+                            <div class="last-watered">
+                                ${plant.lastWatered ? 
+                                    `Last watered: ${daysSinceWatered} days ago ${needsWater ? '🚨 Needs water!' : '✅'}` : 
+                                    'Never watered (new plant)'
+                                }
+                            </div>
+                            <small>${plantNames[plant.type]} • Added ${new Date(plant.addedDate).toLocaleDateString()}</small>
+                        </div>
+                        <div class="plant-actions">
+                            <button class="water-btn" onclick="waterPlant('${plant.id}')">💧 Water</button>
+                            <button class="delete-btn" onclick="deletePlant('${plant.id}')">🗑️ Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('plantLibrary').innerHTML = html;
+        }
+
+        function waterPlant(plantId) {
+            let savedPlants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
+            
+            const plantIndex = savedPlants.findIndex(p => p.id === plantId);
+            if (plantIndex !== -1) {
+                savedPlants[plantIndex].lastWatered = new Date().toISOString();
+                localStorage.setItem('rootJuicePlants', JSON.stringify(savedPlants));
+                loadPlantCollection();
+                
+                const plantName = savedPlants[plantIndex].name;
+                alert(`${plantName} has been watered! 💧🌱`);
+            }
+        }
+
+        function deletePlant(plantId) {
+            let savedPlants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
+            const plant = savedPlants.find(p => p.id === plantId);
+            
+            if (plant && confirm(`Are you sure you want to remove ${plant.name} from your collection?`)) {
+                savedPlants = savedPlants.filter(p => p.id !== plantId);
+                localStorage.setItem('rootJuicePlants', JSON.stringify(savedPlants));
+                loadPlantCollection();
+            }
         }
     </script>
 </body>
