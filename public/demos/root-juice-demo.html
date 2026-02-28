@@ -321,7 +321,34 @@
         <div id="savedPlants" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 style="margin: 0;">🌿 My Plant Collection</h2>
-                <div id="notificationStatus" style="font-size: 0.9em; color: #6c757d;"></div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div id="notificationStatus" style="font-size: 0.9em; color: #6c757d;"></div>
+                    <button onclick="toggleNotificationSettings()" style="background: none; border: 1px solid #dee2e6; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 0.8em; color: #6c757d;">⚙️ Settings</button>
+                </div>
+            </div>
+            
+            <div id="notificationSettings" style="display: none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+                <h4 style="margin: 0 0 15px 0;">🔔 Notification Settings</h4>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="enableDailyReminders" onchange="updateNotificationSettings()">
+                        <span>Daily reminders (once per day for overdue plants)</span>
+                    </label>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="enableAdvanceReminders" onchange="updateNotificationSettings()">
+                        <span>Advance warnings (remind 1 day before due)</span>
+                    </label>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px;">Reminder time:</label>
+                    <input type="time" id="reminderTime" onchange="updateNotificationSettings()" value="09:00" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="testNotification()" class="save-btn" style="padding: 8px 12px; font-size: 0.9em;">Test Notification</button>
+                    <button onclick="requestNotificationPermission()" class="save-btn" style="padding: 8px 12px; font-size: 0.9em; background: #28a745;" id="enableNotificationsBtn">Enable Notifications</button>
+                </div>
             </div>
             <div id="plantLibrary"></div>
         </div>
@@ -374,6 +401,16 @@
             loadPlantCollection();
             checkNotificationPermission();
             checkForOverduePlants();
+            
+            // Set up periodic reminders (check every hour when app is open)
+            setInterval(checkForOverduePlants, 60 * 60 * 1000); // 1 hour
+            
+            // Also check when the page becomes visible (user returns to tab)
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    checkForOverduePlants();
+                }
+            });
         };
 
         function checkNotificationPermission() {
@@ -397,6 +434,143 @@
         }
 
         function checkForOverduePlants() {
+            const plants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
+            const today = new Date();
+            let overdueCount = 0;
+            let dueTodayCount = 0;
+
+            plants.forEach(plant => {
+                const daysSinceWatered = Math.floor((today - new Date(plant.lastWatered)) / (1000 * 60 * 60 * 24));
+                
+                if (daysSinceWatered >= plant.schedule.waterEveryDays) {
+                    if (daysSinceWatered > plant.schedule.waterEveryDays) {
+                        overdueCount++;
+                    } else {
+                        dueTodayCount++;
+                    }
+                }
+            });
+
+            // Update notification status display
+            const statusEl = document.getElementById('notificationStatus');
+            if (statusEl) {
+                let statusText = '';
+                if (Notification.permission === 'granted') {
+                    if (overdueCount > 0) {
+                        statusText = `🚨 ${overdueCount} plant${overdueCount > 1 ? 's' : ''} overdue`;
+                    } else if (dueTodayCount > 0) {
+                        statusText = `🔔 ${dueTodayCount} plant${dueTodayCount > 1 ? 's' : ''} due today`;
+                    } else {
+                        statusText = '✅ All plants up to date';
+                    }
+                } else {
+                    statusText = '🔔 Notifications disabled';
+                }
+                statusEl.textContent = statusText;
+            }
+
+            // Send notifications based on user settings
+            if (Notification.permission === 'granted') {
+                const settings = JSON.parse(localStorage.getItem('notificationSettings') || '{"daily": true, "advance": false, "time": "09:00"}');
+                const lastNotificationDate = localStorage.getItem('lastNotificationDate');
+                const todayStr = today.toDateString();
+                
+                // Check for advance warnings (1 day before due)
+                let dueTomorrowCount = 0;
+                if (settings.advance) {
+                    plants.forEach(plant => {
+                        const daysSinceWatered = Math.floor((today - new Date(plant.lastWatered)) / (1000 * 60 * 60 * 24));
+                        if (daysSinceWatered === plant.schedule.waterEveryDays - 1) {
+                            dueTomorrowCount++;
+                        }
+                    });
+                }
+                
+                // Only notify once per day based on settings
+                if (settings.daily && lastNotificationDate !== todayStr) {
+                    let notifications = [];
+                    
+                    if (overdueCount > 0) {
+                        notifications.push(`${overdueCount} plant${overdueCount > 1 ? 's are' : ' is'} overdue`);
+                    }
+                    if (dueTodayCount > 0) {
+                        notifications.push(`${dueTodayCount} plant${dueTodayCount > 1 ? 's need' : ' needs'} water today`);
+                    }
+                    if (dueTomorrowCount > 0 && settings.advance) {
+                        notifications.push(`${dueTomorrowCount} plant${dueTomorrowCount > 1 ? 's will' : ' will'} need water tomorrow`);
+                    }
+                    
+                    if (notifications.length > 0) {
+                        const notificationBody = notifications.join(', ');
+                        
+                        new Notification('🌱 Plant Care Reminder', {
+                            body: notificationBody,
+                            icon: './icon-192.png',
+                            badge: './icon-192.png',
+                            tag: 'plant-reminder',
+                            requireInteraction: true,
+                            actions: [
+                                { action: 'view', title: 'View Plants' },
+                                { action: 'dismiss', title: 'Dismiss' }
+                            ]
+                        });
+                        
+                        localStorage.setItem('lastNotificationDate', todayStr);
+                    }
+                }
+            }
+        }
+
+        function toggleNotificationSettings() {
+            const settingsEl = document.getElementById('notificationSettings');
+            if (settingsEl.style.display === 'none') {
+                settingsEl.style.display = 'block';
+                loadNotificationSettings();
+            } else {
+                settingsEl.style.display = 'none';
+            }
+        }
+
+        function loadNotificationSettings() {
+            const settings = JSON.parse(localStorage.getItem('notificationSettings') || '{"daily": true, "advance": false, "time": "09:00"}');
+            
+            document.getElementById('enableDailyReminders').checked = settings.daily;
+            document.getElementById('enableAdvanceReminders').checked = settings.advance;
+            document.getElementById('reminderTime').value = settings.time;
+            
+            // Update button visibility
+            const enableBtn = document.getElementById('enableNotificationsBtn');
+            if (Notification.permission === 'granted') {
+                enableBtn.style.display = 'none';
+            } else {
+                enableBtn.style.display = 'inline-block';
+            }
+        }
+
+        function updateNotificationSettings() {
+            const settings = {
+                daily: document.getElementById('enableDailyReminders').checked,
+                advance: document.getElementById('enableAdvanceReminders').checked,
+                time: document.getElementById('reminderTime').value
+            };
+            
+            localStorage.setItem('notificationSettings', JSON.stringify(settings));
+            
+            // Re-check plants with new settings
+            checkForOverduePlants();
+        }
+
+        function testNotification() {
+            if (Notification.permission === 'granted') {
+                new Notification('🌱 Root Juice Test', {
+                    body: 'Notifications are working perfectly! You\'ll get reminders when your plants need water.',
+                    icon: './icon-192.png',
+                    tag: 'test-notification'
+                });
+            } else {
+                alert('Please enable notifications first to test them.');
+            }
+        }
             if ('Notification' in window && Notification.permission === 'granted') {
                 const savedPlants = JSON.parse(localStorage.getItem('rootJuicePlants') || '[]');
                 
