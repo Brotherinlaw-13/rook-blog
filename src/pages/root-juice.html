@@ -94,6 +94,157 @@
             border-left: 5px solid #68d391;
         }
         
+        /* Onboarding Flow Styles */
+        .welcome-intro {
+            font-size: 1.1em;
+            color: #4a5568;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .onboarding-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .onboarding-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .onboarding-card:hover {
+            transform: translateY(-3px);
+            border-color: #68d391;
+            box-shadow: 0 8px 20px rgba(104, 211, 145, 0.15);
+        }
+        
+        .onboarding-card.guided {
+            border-color: #63b3ed;
+        }
+        
+        .onboarding-card.guided:hover {
+            border-color: #4299e1;
+            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.2);
+        }
+        
+        .onboarding-card.express {
+            border-color: #f6ad55;
+        }
+        
+        .onboarding-card.express:hover {
+            border-color: #ed8936;
+            box-shadow: 0 8px 20px rgba(237, 137, 54, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .onboarding-card h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .onboarding-card p {
+            color: #718096;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        
+        .duration {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .progress-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #68d391 0%, #38b2ac 100%);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 20%;
+        }
+        
+        .progress-text {
+            color: #4a5568;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        
+        .guided-step {
+            display: none;
+        }
+        
+        .guided-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .guided-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .step-help {
+            background: #e6fffa;
+            border: 1px solid #81e6d9;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #234e52;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .onboarding-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .onboarding-card {
+                padding: 20px;
+            }
+        }
+        
         .environment-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1044,74 +1195,233 @@
                 </div>
             </div>
             
-            <div class="demo-section">
-                <h2>🏠 Your Plant's Environment</h2>
-                <p>Answer these questions to get a personalized care schedule that accounts for your specific home environment:</p>
-                
-                <div class="environment-form">
-                    <div class="form-group">
-                        <label for="roomType">Room Type</label>
-                        <select id="roomType">
-                            <option value="living-room">Living Room</option>
-                            <option value="bedroom">Bedroom</option>
-                            <option value="kitchen">Kitchen</option>
-                            <option value="bathroom">Bathroom</option>
-                            <option value="conservatory">Conservatory</option>
-                        </select>
-                    </div>
+            <!-- Onboarding Flow -->
+            <div class="demo-section" id="onboardingSection">
+                <div id="welcomeStep" class="onboarding-step">
+                    <h2>🌱 Welcome to Root Juice!</h2>
+                    <p class="welcome-intro">Ready to give your plant the perfect care? We'll create a personalized schedule based on your unique home environment.</p>
                     
-                    <div class="form-group">
-                        <label for="windowDirection">Window Direction</label>
-                        <select id="windowDirection">
-                            <option value="south">South (Lots of sun)</option>
-                            <option value="west">West (Afternoon sun)</option>
-                            <option value="east">East (Morning sun)</option>
-                            <option value="north">North (Gentle light)</option>
-                            <option value="none">No nearby window</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="radiatorProximity">Radiator Proximity</label>
-                        <select id="radiatorProximity">
-                            <option value="very-close">Very Close (0-1m)</option>
-                            <option value="close">Close (1-2m)</option>
-                            <option value="medium">Medium (2-3m)</option>
-                            <option value="far">Far (3-4m)</option>
-                            <option value="very-far">Very Far (4m+)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="plantType">Plant Type</label>
-                        <select id="plantType">
-                            <option value="pothos">Pothos (Devil's Ivy)</option>
-                            <option value="monstera">Monstera Deliciosa</option>
-                            <option value="snake-plant">Snake Plant</option>
-                            <option value="fiddle-leaf">Fiddle Leaf Fig</option>
-                            <option value="rubber-plant">Rubber Plant</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="plantName">Plant's Nickname (Optional)</label>
-                        <input type="text" id="plantName" placeholder="e.g., Gerald the Gorgeous">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="heatingStatus">Heating Status</label>
-                        <select id="heatingStatus">
-                            <option value="winter-on">Winter Heating On</option>
-                            <option value="winter-off">Winter Heating Off</option>
-                            <option value="summer">Summer (No Heating)</option>
-                        </select>
+                    <div class="onboarding-options">
+                        <div class="onboarding-card guided" onclick="startGuidedFlow()">
+                            <div class="card-icon">🎯</div>
+                            <h3>Guided Setup</h3>
+                            <p>Step-by-step questions to ensure perfect accuracy</p>
+                            <div class="duration">~2 minutes</div>
+                        </div>
+                        
+                        <div class="onboarding-card express" onclick="startExpressFlow()">
+                            <div class="card-icon">⚡</div>
+                            <h3>Express Setup</h3>
+                            <p>Quick form if you know your plant & environment</p>
+                            <div class="duration">~30 seconds</div>
+                        </div>
                     </div>
                 </div>
                 
-                <button class="calculate-btn" id="calculateBtn" onclick="calculateSchedule()">
-                    <span id="btnText">🧮 Calculate My Plant's Schedule</span>
-                    <span id="loadingSpinner" style="display: none;">🌱 Analyzing...</span>
-                </button>
+                <!-- Progress Indicator (for guided flow) -->
+                <div id="progressIndicator" style="display: none;">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text">
+                            Step <span id="currentStep">1</span> of <span id="totalSteps">5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Guided Flow Steps -->
+                <div id="guidedStep1" class="onboarding-step guided-step" style="display: none;">
+                    <h2>🏠 Where does your plant live?</h2>
+                    <p>Different rooms have different humidity levels and lighting conditions.</p>
+                    
+                    <div class="guided-form">
+                        <div class="form-group">
+                            <label for="roomType">Room Type</label>
+                            <select id="roomType" onchange="nextGuidedStep()">
+                                <option value="">Choose your plant's room...</option>
+                                <option value="living-room">Living Room</option>
+                                <option value="bedroom">Bedroom</option>
+                                <option value="kitchen">Kitchen (more humid)</option>
+                                <option value="bathroom">Bathroom (very humid)</option>
+                                <option value="conservatory">Conservatory (bright)</option>
+                            </select>
+                        </div>
+                        <div class="step-help">
+                            💡 Kitchens and bathrooms naturally have higher humidity, which most plants love!
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="guidedStep2" class="onboarding-step guided-step" style="display: none;">
+                    <h2>☀️ How much natural light does it get?</h2>
+                    <p>Window direction makes a huge difference in the UK!</p>
+                    
+                    <div class="guided-form">
+                        <div class="form-group">
+                            <label for="windowDirection">Nearest Window Direction</label>
+                            <select id="windowDirection" onchange="nextGuidedStep()">
+                                <option value="">Select window direction...</option>
+                                <option value="south">South (Lots of sun all day)</option>
+                                <option value="west">West (Strong afternoon sun)</option>
+                                <option value="east">East (Gentle morning sun)</option>
+                                <option value="north">North (Soft, indirect light)</option>
+                                <option value="none">No nearby window</option>
+                            </select>
+                        </div>
+                        <div class="step-help">
+                            💡 South windows get the most intense light. North windows provide gentle, consistent light perfect for many plants.
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="guidedStep3" class="onboarding-step guided-step" style="display: none;">
+                    <h2>🔥 How close to the radiator?</h2>
+                    <p>This is crucial! Radiators create dry air that affects watering needs.</p>
+                    
+                    <div class="guided-form">
+                        <div class="form-group">
+                            <label for="radiatorProximity">Distance to Radiator</label>
+                            <select id="radiatorProximity" onchange="nextGuidedStep()">
+                                <option value="">Choose distance...</option>
+                                <option value="very-close">Right next to it (0-1m) - Gets very dry</option>
+                                <option value="close">Nearby (1-2m) - Noticeable warmth</option>
+                                <option value="medium">Same room (2-3m) - Mild effect</option>
+                                <option value="far">Different area (3-4m) - Little effect</option>
+                                <option value="very-far">Far away (4m+) - No effect</option>
+                            </select>
+                        </div>
+                        <div class="step-help">
+                            💡 Plants near radiators need more frequent watering due to dry air. This is the #1 thing other apps miss!
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="guidedStep4" class="onboarding-step guided-step" style="display: none;">
+                    <h2>🌿 What type of plant is it?</h2>
+                    <p>Each species has different water needs. Don't worry if yours isn't listed!</p>
+                    
+                    <div class="guided-form">
+                        <div class="form-group">
+                            <label for="plantType">Plant Species</label>
+                            <select id="plantType" onchange="nextGuidedStep()">
+                                <option value="">Choose your plant...</option>
+                                <option value="pothos">Pothos (Devil's Ivy) - Very easy</option>
+                                <option value="monstera">Monstera Deliciosa - Popular choice</option>
+                                <option value="snake-plant">Snake Plant - Nearly indestructible</option>
+                                <option value="fiddle-leaf">Fiddle Leaf Fig - Bit fussy</option>
+                                <option value="rubber-plant">Rubber Plant - Fast growing</option>
+                                <option value="peace-lily">Peace Lily - Dramatic about water</option>
+                                <option value="other">Other/Don't know - We'll use smart defaults</option>
+                            </select>
+                        </div>
+                        <div class="step-help">
+                            💡 Can't find your plant? Choose "Other" - our algorithm will still give you a great starting point!
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="guidedStep5" class="onboarding-step guided-step" style="display: none;">
+                    <h2>🏷️ Final touches...</h2>
+                    <p>Nearly there! Just a couple more details to perfect your schedule.</p>
+                    
+                    <div class="guided-form">
+                        <div class="form-group">
+                            <label for="plantName">Give your plant a nickname (optional)</label>
+                            <input type="text" id="plantName" placeholder="e.g., Gerald the Gorgeous" onkeypress="handlePlantNameKey(event)">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="heatingStatus">Current Season</label>
+                            <select id="heatingStatus" onchange="enableCalculateButton()">
+                                <option value="">Choose current season...</option>
+                                <option value="winter-on">Winter (Heating On)</option>
+                                <option value="winter-off">Winter (Heating Off)</option>
+                                <option value="summer">Summer (No Heating)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="step-help">
+                            💡 Winter heating creates dry air. We'll adjust your schedule accordingly!
+                        </div>
+                    </div>
+                    
+                    <button class="calculate-btn" id="calculateBtn" onclick="calculateSchedule()" style="display: none;">
+                        <span id="btnText">🧮 Create My Perfect Schedule</span>
+                        <span id="loadingSpinner" style="display: none;">🌱 Analyzing your environment...</span>
+                    </button>
+                </div>
+                
+                <!-- Express Flow (Original Form, Hidden by Default) -->
+                <div id="expressFlow" style="display: none;">
+                    <h2>⚡ Express Setup</h2>
+                    <p>Fill in all details below for your personalized care schedule:</p>
+                    
+                    <div class="environment-form">
+                        <div class="form-group">
+                            <label for="roomTypeExpress">Room Type</label>
+                            <select id="roomTypeExpress">
+                                <option value="living-room">Living Room</option>
+                                <option value="bedroom">Bedroom</option>
+                                <option value="kitchen">Kitchen</option>
+                                <option value="bathroom">Bathroom</option>
+                                <option value="conservatory">Conservatory</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="windowDirectionExpress">Window Direction</label>
+                            <select id="windowDirectionExpress">
+                                <option value="south">South (Lots of sun)</option>
+                                <option value="west">West (Afternoon sun)</option>
+                                <option value="east">East (Morning sun)</option>
+                                <option value="north">North (Gentle light)</option>
+                                <option value="none">No nearby window</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="radiatorProximityExpress">Radiator Proximity</label>
+                            <select id="radiatorProximityExpress">
+                                <option value="very-close">Very Close (0-1m)</option>
+                                <option value="close">Close (1-2m)</option>
+                                <option value="medium">Medium (2-3m)</option>
+                                <option value="far">Far (3-4m)</option>
+                                <option value="very-far">Very Far (4m+)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plantTypeExpress">Plant Type</label>
+                            <select id="plantTypeExpress">
+                                <option value="pothos">Pothos (Devil's Ivy)</option>
+                                <option value="monstera">Monstera Deliciosa</option>
+                                <option value="snake-plant">Snake Plant</option>
+                                <option value="fiddle-leaf">Fiddle Leaf Fig</option>
+                                <option value="rubber-plant">Rubber Plant</option>
+                                <option value="peace-lily">Peace Lily</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plantNameExpress">Plant's Nickname (Optional)</label>
+                            <input type="text" id="plantNameExpress" placeholder="e.g., Gerald the Gorgeous">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="heatingStatusExpress">Heating Status</label>
+                            <select id="heatingStatusExpress">
+                                <option value="winter-on">Winter Heating On</option>
+                                <option value="winter-off">Winter Heating Off</option>
+                                <option value="summer">Summer (No Heating)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="calculate-btn" onclick="calculateScheduleExpress()">
+                        <span>🧮 Calculate My Plant's Schedule</span>
+                    </button>
+                </div>
             </div>
             
             <div id="results" class="results-card" style="display: none;">
@@ -1943,6 +2253,72 @@
                 calculateSchedule();
             }, 500);
         });
+
+        // Onboarding Flow Functions
+        let currentGuidedStep = 1;
+        const totalGuidedSteps = 5;
+        
+        function startGuidedFlow() {
+            document.getElementById('welcomeStep').style.display = 'none';
+            document.getElementById('progressIndicator').style.display = 'block';
+            document.getElementById('guidedStep1').style.display = 'block';
+            updateProgress();
+        }
+        
+        function startExpressFlow() {
+            document.getElementById('welcomeStep').style.display = 'none';
+            document.getElementById('expressFlow').style.display = 'block';
+        }
+        
+        function nextGuidedStep() {
+            // Hide current step
+            document.getElementById(`guidedStep${currentGuidedStep}`).style.display = 'none';
+            
+            // Move to next step
+            currentGuidedStep++;
+            
+            if (currentGuidedStep <= totalGuidedSteps) {
+                document.getElementById(`guidedStep${currentGuidedStep}`).style.display = 'block';
+                updateProgress();
+            }
+        }
+        
+        function updateProgress() {
+            const progressPercentage = (currentGuidedStep / totalGuidedSteps) * 100;
+            document.getElementById('progressFill').style.width = progressPercentage + '%';
+            document.getElementById('currentStep').textContent = currentGuidedStep;
+            document.getElementById('totalSteps').textContent = totalGuidedSteps;
+        }
+        
+        function enableCalculateButton() {
+            const button = document.getElementById('calculateBtn');
+            button.style.display = 'block';
+            button.style.animation = 'fadeIn 0.5s ease';
+        }
+        
+        function handlePlantNameKey(event) {
+            if (event.key === 'Enter') {
+                const heatingSelect = document.getElementById('heatingStatus');
+                if (heatingSelect.value) {
+                    enableCalculateButton();
+                } else {
+                    heatingSelect.focus();
+                }
+            }
+        }
+        
+        function calculateScheduleExpress() {
+            // Copy values from express form to main form elements
+            document.getElementById('roomType').value = document.getElementById('roomTypeExpress').value;
+            document.getElementById('windowDirection').value = document.getElementById('windowDirectionExpress').value;
+            document.getElementById('radiatorProximity').value = document.getElementById('radiatorProximityExpress').value;
+            document.getElementById('plantType').value = document.getElementById('plantTypeExpress').value;
+            document.getElementById('plantName').value = document.getElementById('plantNameExpress').value;
+            document.getElementById('heatingStatus').value = document.getElementById('heatingStatusExpress').value;
+            
+            // Call the main calculation function
+            calculateSchedule();
+        }
 
         // Register service worker for PWA functionality
         if ('serviceWorker' in navigator) {
