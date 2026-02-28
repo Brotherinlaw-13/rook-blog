@@ -2079,7 +2079,7 @@
                     nextReminder: calculateNextReminder(frequency, time)
                 };
                 
-                localStorage.setItem('rootJuiceReminders', JSON.stringify(settings));
+                storage.set('rootJuiceReminders', settings);
                 
                 // Schedule first reminder
                 scheduleNextReminder(settings);
@@ -2133,7 +2133,7 @@
                         ...settings,
                         nextReminder: calculateNextReminder(settings.frequency, settings.time)
                     };
-                    localStorage.setItem('rootJuiceReminders', JSON.stringify(newSettings));
+                    storage.set('rootJuiceReminders', newSettings);
                     scheduleNextReminder(newSettings);
                     
                 }, timeUntilReminder);
@@ -2141,12 +2141,29 @@
         }
         
         function showNotification(title, body) {
-            if (Notification.permission === 'granted') {
-                new Notification(title, {
-                    body: body,
-                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌱</text></svg>',
-                    tag: 'root-juice-reminder'
-                });
+            try {
+                if (Notification.permission === 'granted') {
+                    const notification = new Notification(title, {
+                        body: body,
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌱</text></svg>',
+                        tag: 'root-juice-reminder',
+                        silent: false,
+                        requireInteraction: false
+                    });
+                    
+                    // Auto-close notification after 5 seconds to prevent clutter
+                    setTimeout(() => {
+                        notification.close();
+                    }, 5000);
+                    
+                    return notification;
+                } else {
+                    console.warn('Root Juice: Notification permission not granted');
+                    return null;
+                }
+            } catch (error) {
+                console.error('Root Juice: Failed to show notification', error);
+                return null;
             }
         }
         
@@ -2158,10 +2175,18 @@
         }
 
         async function calculateSchedule() {
+            performance.start('schedule_calculation');
+            
             const btn = document.getElementById('calculateBtn');
             const btnText = document.getElementById('btnText');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const resultsCard = document.getElementById('results');
+            
+            // Validate required elements exist
+            if (!btn || !btnText || !loadingSpinner || !resultsCard) {
+                console.error('Root Juice: Missing required DOM elements');
+                return;
+            }
             
             // Show loading state
             btn.disabled = true;
@@ -2172,19 +2197,36 @@
             resultsCard.style.display = 'none';
             
             try {
-                // Simulate processing time for better UX
-                await new Promise(resolve => setTimeout(resolve, 800));
+                // Validate required inputs
+                const requiredFields = ['roomType', 'windowDirection', 'radiatorProximity', 'plantType', 'heatingStatus'];
+                const environment = {};
+                let missingFields = [];
                 
-                const environment = {
-                    roomType: document.getElementById('roomType').value,
-                    windowDirection: document.getElementById('windowDirection').value,
-                    radiatorProximity: document.getElementById('radiatorProximity').value,
-                    plantType: document.getElementById('plantType').value,
-                    plantName: document.getElementById('plantName').value,
-                    heatingStatus: document.getElementById('heatingStatus').value
-                };
+                for (const field of requiredFields) {
+                    const element = document.getElementById(field);
+                    if (!element || !element.value) {
+                        missingFields.push(field);
+                    } else {
+                        environment[field] = element.value;
+                    }
+                }
+                
+                // Add optional plant name
+                const plantNameElement = document.getElementById('plantName');
+                environment.plantName = plantNameElement ? plantNameElement.value : '';
+                
+                if (missingFields.length > 0) {
+                    throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+                }
+                
+                // Simulate processing time for better UX (reduced for performance)
+                await new Promise(resolve => setTimeout(resolve, 600));
                 
                 const schedule = engine.calculateSchedule(environment);
+                
+                if (!schedule || !schedule.frequency) {
+                    throw new Error('Failed to generate schedule - engine returned invalid data');
+                }
                 
                 // Reset button state first
                 btn.disabled = false;
@@ -2235,22 +2277,67 @@
                     resultsCard.scrollIntoView({ behavior: 'smooth' });
                 }, 300);
                 
+                performance.end('schedule_calculation');
+                
             } catch (error) {
                 // Reset button state on error
                 btn.disabled = false;
                 btnText.style.display = 'inline';
                 loadingSpinner.style.display = 'none';
                 
-                // Better error feedback
-                const errorMsg = `Unable to calculate schedule: ${error.message}. Please check your selections and try again.`;
-                alert(errorMsg);
+                console.error('Root Juice: Schedule calculation failed:', error);
+                
+                // Show user-friendly error in the UI instead of alert
+                const errorMessage = error.message.includes('Missing required fields') 
+                    ? 'Please fill in all required fields to calculate your schedule.'
+                    : 'Sorry, there was an error creating your schedule. Please check your inputs and try again.';
+                
+                resultsCard.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #e53e3e; background: #fed7d7; border-radius: 12px; margin: 20px 0;">
+                        <div style="font-size: 2.5em; margin-bottom: 15px;">⚠️</div>
+                        <h3 style="margin: 0 0 15px 0;">Oops! Something went wrong</h3>
+                        <p style="margin: 15px 0; line-height: 1.5;">${errorMessage}</p>
+                        <button onclick="location.reload()" 
+                                style="background: #48bb78; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px;">
+                            🔄 Start Over
+                        </button>
+                    </div>
+                `;
+                resultsCard.style.display = 'block';
+                resultsCard.scrollIntoView({ behavior: 'smooth' });
+                
+                performance.end('schedule_calculation');
             }
         }
         
+        // Performance monitoring
+        const performance = {
+            start(label) {
+                this[label + '_start'] = Date.now();
+            },
+            
+            end(label) {
+                const start = this[label + '_start'];
+                if (start) {
+                    const duration = Date.now() - start;
+                    console.log(`Root Juice: ${label} took ${duration}ms`);
+                    delete this[label + '_start'];
+                    return duration;
+                }
+                return 0;
+            }
+        };
+
         // Auto-calculate on page load
         window.addEventListener('load', function() {
+            performance.start('page_load');
             setTimeout(() => {
-                calculateSchedule();
+                // Only auto-calculate if we have stored data from a previous session
+                const storedReminders = storage.get('rootJuiceReminders');
+                if (storedReminders && storedReminders.plantName) {
+                    console.log('Root Juice: Found previous session, skipping auto-calculation');
+                }
+                performance.end('page_load');
             }, 500);
         });
 
@@ -2318,6 +2405,71 @@
             
             // Call the main calculation function
             calculateSchedule();
+        }
+
+        // Safe localStorage utilities
+        const storage = {
+            get(key, fallback = null) {
+                try {
+                    const item = localStorage.getItem(key);
+                    return item ? JSON.parse(item) : fallback;
+                } catch (error) {
+                    console.warn(`Root Juice: Failed to get ${key} from localStorage:`, error);
+                    return fallback;
+                }
+            },
+            
+            set(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (error) {
+                    console.error(`Root Juice: Failed to save ${key} to localStorage:`, error);
+                    // Handle quota exceeded error
+                    if (error.name === 'QuotaExceededError') {
+                        console.warn('Root Juice: localStorage quota exceeded, clearing old data');
+                        this.clearOldData();
+                    }
+                    return false;
+                }
+            },
+            
+            remove(key) {
+                try {
+                    localStorage.removeItem(key);
+                    return true;
+                } catch (error) {
+                    console.error(`Root Juice: Failed to remove ${key} from localStorage:`, error);
+                    return false;
+                }
+            },
+            
+            clearOldData() {
+                // Clear old growth logs if storage is full (keep only last 50)
+                try {
+                    const logs = this.get('rootJuiceGrowthLogs', []);
+                    if (logs.length > 50) {
+                        const recentLogs = logs.slice(-50);
+                        this.set('rootJuiceGrowthLogs', recentLogs);
+                        console.log('Root Juice: Cleaned up old growth logs');
+                    }
+                } catch (error) {
+                    console.error('Root Juice: Failed to cleanup old data:', error);
+                }
+            }
+        };
+
+        // Debounce utility for performance optimization
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
 
         // Register service worker for PWA functionality
