@@ -942,6 +942,120 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
         }
+        
+        /* Data Management Styles */
+        .data-management h3 {
+            color: #2f855a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .data-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%);
+            border-radius: 12px;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2f855a;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .data-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .action-section {
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #48bb78;
+            background: #f7fafc;
+        }
+        
+        .action-section h4 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-section p {
+            color: #718096;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+        
+        .data-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .export-btn {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+        
+        .import-btn {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+        
+        .import-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+        }
+        
+        .danger-zone {
+            border-left-color: #f56565;
+            background: #fed7d7;
+        }
+        
+        .danger-btn {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+        }
+        
+        .danger-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -1333,6 +1447,7 @@
                 <div class="growth-tabs">
                     <button class="growth-tab active" onclick="showGrowthTab('log')">Log Entry</button>
                     <button class="growth-tab" onclick="showGrowthTab('timeline')">Timeline</button>
+                    <button class="growth-tab" onclick="showGrowthTab('data')">💾 Backup</button>
                 </div>
             </div>
             
@@ -1366,6 +1481,49 @@
                 <div class="growth-timeline" id="timeline-container">
                     <div class="empty-timeline">
                         No growth entries yet. Start tracking your plant's journey!
+                    </div>
+                </div>
+            </div>
+
+            <div id="growth-data" class="growth-content" style="display: none;">
+                <div class="data-management">
+                    <h3>📦 Data Management</h3>
+                    <div class="data-stats" id="dataStats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="growthEntries">0</div>
+                            <div class="stat-label">Growth Entries</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="reminderSettings">0</div>
+                            <div class="stat-label">Reminder Settings</div>
+                        </div>
+                    </div>
+                    
+                    <div class="data-actions">
+                        <div class="action-section">
+                            <h4>🚀 Export Data</h4>
+                            <p>Download all your plant data as a backup file</p>
+                            <button class="data-btn export-btn" onclick="exportPlantData()">
+                                📥 Export All Data
+                            </button>
+                        </div>
+                        
+                        <div class="action-section">
+                            <h4>📤 Import Data</h4>
+                            <p>Restore data from a previous backup</p>
+                            <input type="file" id="importFile" accept=".json" onchange="importPlantData(event)" style="display: none;">
+                            <button class="data-btn import-btn" onclick="document.getElementById('importFile').click()">
+                                📤 Import Backup
+                            </button>
+                        </div>
+                        
+                        <div class="action-section danger-zone">
+                            <h4>🗑️ Clear Data</h4>
+                            <p>Permanently remove all stored data</p>
+                            <button class="data-btn danger-btn" onclick="clearAllData()">
+                                ⚠️ Clear All Data
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2175,9 +2333,12 @@
             // Show/hide content
             document.getElementById('growth-log').style.display = tab === 'log' ? 'block' : 'none';
             document.getElementById('growth-timeline').style.display = tab === 'timeline' ? 'block' : 'none';
+            document.getElementById('growth-data').style.display = tab === 'data' ? 'block' : 'none';
             
             if (tab === 'timeline') {
                 loadGrowthTimeline();
+            } else if (tab === 'data') {
+                loadDataStats();
             }
         }
 
@@ -2335,6 +2496,173 @@
             setTimeout(() => {
                 growthTracking.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 500);
+        }
+
+        // Data Management Functions
+        function loadDataStats() {
+            // Count growth entries
+            const growthHistory = JSON.parse(localStorage.getItem('rootJuiceGrowthHistory') || '[]');
+            document.getElementById('growthEntries').textContent = growthHistory.length;
+            
+            // Count reminder settings
+            const reminderSettings = localStorage.getItem('rootJuiceReminders');
+            document.getElementById('reminderSettings').textContent = reminderSettings ? '1' : '0';
+        }
+
+        function exportPlantData() {
+            try {
+                // Collect all plant data
+                const data = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    growthHistory: JSON.parse(localStorage.getItem('rootJuiceGrowthHistory') || '[]'),
+                    reminderSettings: JSON.parse(localStorage.getItem('rootJuiceReminders') || 'null'),
+                    metadata: {
+                        totalEntries: JSON.parse(localStorage.getItem('rootJuiceGrowthHistory') || '[]').length,
+                        hasReminders: !!localStorage.getItem('rootJuiceReminders')
+                    }
+                };
+                
+                // Create downloadable file
+                const jsonString = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `root-juice-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                // Show success feedback
+                showDataFeedback('✅ Data exported successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                showDataFeedback('❌ Export failed. Please try again.', 'error');
+            }
+        }
+
+        function importPlantData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.name.endsWith('.json')) {
+                showDataFeedback('❌ Please select a JSON backup file.', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate backup format
+                    if (!data.version || !data.exportDate) {
+                        throw new Error('Invalid backup format');
+                    }
+                    
+                    // Confirm with user before overwriting
+                    const currentEntries = JSON.parse(localStorage.getItem('rootJuiceGrowthHistory') || '[]').length;
+                    const importEntries = data.growthHistory ? data.growthHistory.length : 0;
+                    
+                    const confirmMessage = currentEntries > 0 
+                        ? `This will replace your current ${currentEntries} entries with ${importEntries} entries from the backup. Continue?`
+                        : `Import ${importEntries} growth entries from backup?`;
+                    
+                    if (!confirm(confirmMessage)) return;
+                    
+                    // Import data
+                    if (data.growthHistory) {
+                        localStorage.setItem('rootJuiceGrowthHistory', JSON.stringify(data.growthHistory));
+                    }
+                    
+                    if (data.reminderSettings) {
+                        localStorage.setItem('rootJuiceReminders', JSON.stringify(data.reminderSettings));
+                    }
+                    
+                    // Update display
+                    loadDataStats();
+                    loadGrowthTimeline();
+                    
+                    showDataFeedback(`✅ Successfully imported ${importEntries} entries!`, 'success');
+                    
+                } catch (error) {
+                    console.error('Import error:', error);
+                    showDataFeedback('❌ Invalid backup file format.', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function clearAllData() {
+            const growthEntries = JSON.parse(localStorage.getItem('rootJuiceGrowthHistory') || '[]').length;
+            const hasReminders = !!localStorage.getItem('rootJuiceReminders');
+            
+            let dataDescription = [];
+            if (growthEntries > 0) dataDescription.push(`${growthEntries} growth entries`);
+            if (hasReminders) dataDescription.push('reminder settings');
+            
+            if (dataDescription.length === 0) {
+                showDataFeedback('🤷‍♂️ No data to clear!', 'info');
+                return;
+            }
+            
+            const confirmMessage = `⚠️ PERMANENT ACTION ⚠️\n\nThis will permanently delete:\n• ${dataDescription.join('\n• ')}\n\nType "DELETE" to confirm:`;
+            const confirmation = prompt(confirmMessage);
+            
+            if (confirmation === 'DELETE') {
+                // Clear all data
+                localStorage.removeItem('rootJuiceGrowthHistory');
+                localStorage.removeItem('rootJuiceReminders');
+                
+                // Update display
+                loadDataStats();
+                loadGrowthTimeline();
+                
+                // Reset reminder button if visible
+                const reminderBtn = document.querySelector('.reminder-btn');
+                if (reminderBtn) {
+                    reminderBtn.textContent = '🔔 Enable Reminders';
+                    reminderBtn.disabled = false;
+                    reminderBtn.style.opacity = '1';
+                }
+                
+                showDataFeedback('✅ All data cleared successfully.', 'success');
+            }
+        }
+
+        function showDataFeedback(message, type) {
+            const feedback = document.createElement('div');
+            feedback.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: ${type === 'error' ? '#f56565' : type === 'success' ? '#48bb78' : '#4299e1'};
+                color: white;
+                padding: 20px 30px;
+                border-radius: 12px;
+                z-index: 1000;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                font-weight: 600;
+                max-width: 90vw;
+                text-align: center;
+            `;
+            feedback.textContent = message;
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.style.transition = 'opacity 0.3s ease';
+                feedback.style.opacity = '0';
+                setTimeout(() => feedback.remove(), 300);
+            }, 3000);
         }
 
         // Register service worker for PWA functionality
