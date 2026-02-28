@@ -122,6 +122,7 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(5px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            width: 100%;
         }
         
         select:hover, input[type="text"]:hover {
@@ -140,6 +141,22 @@
             transform: translateY(-1px);
         }
         
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+        
+        .form-group:focus-within label {
+            color: #38a169;
+        }
+        
         .calculate-btn {
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
@@ -149,15 +166,37 @@
             font-weight: bold;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: all 0.3s ease;
             margin: 20px auto;
             display: block;
             min-width: 200px;
+            position: relative;
+            overflow: hidden;
         }
         
-        .calculate-btn:hover {
+        .calculate-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+        
+        .calculate-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.9; }
+        }
+        
+        #loadingSpinner {
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
         }
         
         .results-card {
@@ -213,8 +252,15 @@
             border-radius: 15px;
             padding: 20px;
             margin-top: 15px;
-            animation: slideIn 0.3s ease-out;
+            animation: slideIn 0.5s ease-out;
             box-shadow: 0 8px 16px rgba(104, 211, 145, 0.1);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+        
+        .plant-info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(104, 211, 145, 0.15);
         }
         
         @keyframes slideIn {
@@ -529,7 +575,8 @@
         
         .care-tab-content {
             display: none;
-            animation: fadeIn 0.3s ease-in;
+            animation: fadeIn 0.4s ease-in;
+            min-height: 300px;
         }
         
         .care-tab-content.active {
@@ -537,8 +584,21 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .care-guide-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f7fafc;
+            border-radius: 15px;
+            border-left: 5px solid #68d391;
+            transition: all 0.3s ease;
+        }
+        
+        .care-guide-section:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         
         .care-grid {
@@ -1048,8 +1108,9 @@
                     </div>
                 </div>
                 
-                <button class="calculate-btn" onclick="calculateSchedule()">
-                    🧮 Calculate My Plant's Schedule
+                <button class="calculate-btn" id="calculateBtn" onclick="calculateSchedule()">
+                    <span id="btnText">🧮 Calculate My Plant's Schedule</span>
+                    <span id="loadingSpinner" style="display: none;">🌱 Analyzing...</span>
                 </button>
             </div>
             
@@ -1365,15 +1426,27 @@
         function updatePlantInfo() {
             const plantType = document.getElementById('plantType').value;
             const plantInfoCard = document.getElementById('plantInfo');
+            const careGuideSection = document.getElementById('careGuideSection');
+            const reminderSection = document.getElementById('reminderSection');
             
             if (!plantType) {
-                plantInfoCard.style.display = 'none';
+                // Smooth hide with animation
+                plantInfoCard.style.transition = 'all 0.3s ease';
+                plantInfoCard.style.opacity = '0';
+                plantInfoCard.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    plantInfoCard.style.display = 'none';
+                    careGuideSection.style.display = 'none';
+                    reminderSection.style.display = 'none';
+                }, 300);
                 return;
             }
             
             const plant = plantDatabase[plantType];
             if (!plant) {
                 plantInfoCard.style.display = 'none';
+                careGuideSection.style.display = 'none';
+                reminderSection.style.display = 'none';
                 return;
             }
             
@@ -1385,21 +1458,48 @@
             document.getElementById('waterReq').textContent = `💧 ${plant.water}`;
             document.getElementById('difficultyReq').textContent = `📊 ${plant.difficulty}`;
             
-            // Show the card with animation
+            // Show the card with smooth animation
             plantInfoCard.style.display = 'block';
+            plantInfoCard.style.opacity = '0';
+            plantInfoCard.style.transform = 'translateY(20px)';
             
-            // Show care guide section
-            const careGuideSection = document.getElementById('careGuideSection');
-            const careGuidePlantName = document.getElementById('careGuidePlantName');
-            careGuideSection.style.display = 'block';
-            careGuidePlantName.textContent = plant.name.toLowerCase();
-            populateCareGuide(plantType, plant);
+            // Trigger animation after display change
+            setTimeout(() => {
+                plantInfoCard.style.transition = 'all 0.5s ease';
+                plantInfoCard.style.opacity = '1';
+                plantInfoCard.style.transform = 'translateY(0)';
+            }, 50);
             
-            // Show reminder section and update plant name
-            const reminderSection = document.getElementById('reminderSection');
-            const selectedPlantName = document.getElementById('selectedPlantName');
-            reminderSection.style.display = 'block';
-            selectedPlantName.textContent = plant.name.toLowerCase();
+            // Show care guide section with delay for better UX
+            setTimeout(() => {
+                const careGuidePlantName = document.getElementById('careGuidePlantName');
+                careGuideSection.style.display = 'block';
+                careGuideSection.style.opacity = '0';
+                careGuideSection.style.transform = 'translateY(20px)';
+                careGuidePlantName.textContent = plant.name.toLowerCase();
+                populateCareGuide(plantType, plant);
+                
+                setTimeout(() => {
+                    careGuideSection.style.transition = 'all 0.5s ease';
+                    careGuideSection.style.opacity = '1';
+                    careGuideSection.style.transform = 'translateY(0)';
+                }, 50);
+            }, 200);
+            
+            // Show reminder section with additional delay
+            setTimeout(() => {
+                const selectedPlantName = document.getElementById('selectedPlantName');
+                reminderSection.style.display = 'block';
+                reminderSection.style.opacity = '0';
+                reminderSection.style.transform = 'translateY(20px)';
+                selectedPlantName.textContent = plant.name.toLowerCase();
+                
+                setTimeout(() => {
+                    reminderSection.style.transition = 'all 0.5s ease';
+                    reminderSection.style.opacity = '1';
+                    reminderSection.style.transform = 'translateY(0)';
+                }, 50);
+            }, 400);
             
             // Set default reminder frequency based on plant type
             const reminderFreq = document.getElementById('reminderFrequency');
@@ -1747,8 +1847,24 @@
             return `${hour12}:${minute.toString().padStart(2, '0')} ${period}`;
         }
 
-        function calculateSchedule() {
+        async function calculateSchedule() {
+            const btn = document.getElementById('calculateBtn');
+            const btnText = document.getElementById('btnText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const resultsCard = document.getElementById('results');
+            
+            // Show loading state
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            loadingSpinner.style.display = 'inline';
+            
+            // Hide previous results
+            resultsCard.style.display = 'none';
+            
             try {
+                // Simulate processing time for better UX
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
                 const environment = {
                     roomType: document.getElementById('roomType').value,
                     windowDirection: document.getElementById('windowDirection').value,
@@ -1760,8 +1876,20 @@
                 
                 const schedule = engine.calculateSchedule(environment);
                 
-                // Show results
-                document.getElementById('results').style.display = 'block';
+                // Reset button state first
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                loadingSpinner.style.display = 'none';
+                
+                // Show results with smooth animation
+                resultsCard.style.display = 'block';
+                resultsCard.style.opacity = '0';
+                resultsCard.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    resultsCard.style.transition = 'all 0.5s ease';
+                    resultsCard.style.opacity = '1';
+                    resultsCard.style.transform = 'translateY(0)';
+                }, 50);
                 
                 // Update botanist advice
                 let personalizedAdvice = schedule.personalizedAdvice;
@@ -1793,10 +1921,19 @@
                 });
                 
                 // Smooth scroll to results
-                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => {
+                    resultsCard.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
                 
             } catch (error) {
-                alert('Error calculating schedule: ' + error.message);
+                // Reset button state on error
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                loadingSpinner.style.display = 'none';
+                
+                // Better error feedback
+                const errorMsg = `Unable to calculate schedule: ${error.message}. Please check your selections and try again.`;
+                alert(errorMsg);
             }
         }
         
