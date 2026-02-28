@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root Juice User Guide</title>
+    <meta name="description" content="Complete guide to using Root Juice - the environment-aware plant care app">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <style>
+        body {
+            font-family: Georgia, serif;
+            line-height: 1.6;
+            color: #2d3748;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #2f855a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 { color: #2f855a; margin-bottom: 1rem; }
+        h2 { color: #2f855a; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        h3 { color: #4a5568; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .tip {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning {
+            background: #fffaf0;
+            border-left: 4px solid #ed8936;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        strong {
+            color: #2d3748;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header, .content { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="root-juice.html" class="back-link">← Back to Root Juice</a>
+        <h1>🌱 Root Juice User Guide</h1>
+        <p>Everything you need to know about the environment-aware plant care app</p>
+    </div>
+
+    <div class="content">
+        <h2>Getting Started (2 minutes)</h2>
+
+        <h3>1. Choose Your Setup Style</h3>
+        <ul>
+            <li><strong>🚀 Express Setup</strong> - Quick form, basic schedule</li>
+            <li><strong>🎯 Guided Setup</strong> - Step-by-step with tips and explanations</li>
+        </ul>
+
+        <h3>2. Describe Your Environment</h3>
+        <ul>
+            <li><strong>Temperature:</strong> What's your room temperature? (15-25°C)</li>
+            <li><strong>Radiator:</strong> How close is your plant? (This matters more than you think!)</li>
+            <li><strong>Humidity:</strong> British homes are typically dry - be honest</li>
+            <li><strong>Light:</strong> Actual light levels, not wishful thinking</li>
+            <li><strong>Heating:</strong> Scheduled heating creates wet/dry cycles</li>
+        </ul>
+
+        <h3>3. Find Your Plant</h3>
+        <p>Search 120+ common houseplants or browse by category. Each plant shows care requirements and personality.</p>
+
+        <h3>4. Get Your Schedule</h3>
+        <p>Root Juice calculates a personalised watering timeline based on <strong>your home + your plant</strong>. No generic advice.</p>
+
+        <h2>Daily Use</h2>
+
+        <h3>🔔 Smart Reminders</h3>
+        <ul>
+            <li><strong>Enable notifications</strong> for gentle daily reminders</li>
+            <li><strong>Choose your time</strong> - morning motivation or evening check</li>
+            <li><strong>Advance warnings</strong> - 1-day heads up option</li>
+            <li><strong>Visual status</strong> - plants show due/overdue/good states</li>
+            <li><strong>Test notification</strong> - make sure it works for you</li>
+        </ul>
+
+        <h3>📸 Growth Journal</h3>
+        <ul>
+            <li><strong>Add photos</strong> - document your plant's journey</li>
+            <li><strong>Write notes</strong> - track observations and changes</li>
+            <li><strong>View timeline</strong> - see progress over weeks/months</li>
+            <li><strong>Automatic dating</strong> - every entry timestamped</li>
+        </ul>
+
+        <h3>📊 Data Management</h3>
+        <ul>
+            <li><strong>Export backup</strong> - download all your data as JSON</li>
+            <li><strong>Import data</strong> - restore from previous backup</li>
+            <li><strong>View stats</strong> - see how many entries you've made</li>
+            <li><strong>Clear data</strong> - fresh start with double confirmation</li>
+        </ul>
+
+        <h2>Pro Tips</h2>
+
+        <div class="tip">
+            <h3>Environment Accuracy Matters</h3>
+            <ul>
+                <li><strong>Radiator proximity</strong> affects watering frequency by 40%+</li>
+                <li><strong>Scheduled heating</strong> creates wet/dry cycles - factor this in</li>
+                <li><strong>North-facing</strong> rooms are genuinely darker in winter</li>
+                <li><strong>Humidity</strong> is usually lower than you think</li>
+            </ul>
+        </div>
+
+        <h3>Making the Most of Notifications</h3>
+        <ul>
+            <li><strong>Start with daily reminders</strong> - build the habit</li>
+            <li><strong>Use advance warnings</strong> if you travel frequently</li>
+            <li><strong>Visual status is key</strong> - learn to read the plant indicators</li>
+            <li><strong>One notification per day</strong> - we don't spam you</li>
+        </ul>
+
+        <h3>Growth Tracking Workflow</h3>
+        <ul>
+            <li><strong>Photo before watering</strong> - shows actual plant condition</li>
+            <li><strong>Notes capture context</strong> - "looking droopy", "new growth spotted"</li>
+            <li><strong>Weekly photos minimum</strong> - track meaningful changes</li>
+            <li><strong>Date awareness</strong> - timeline shows "3 days ago" vs exact timestamps</li>
+        </ul>
+
+        <h2>Troubleshooting</h2>
+
+        <h3>Notifications Not Working?</h3>
+        <ol>
+            <li>Check browser permissions (click 🔔 icon in address bar)</li>
+            <li>Use "Test Notification" button to verify</li>
+            <li>Some browsers block notifications in private mode</li>
+            <li>iPhone: enable in Safari settings</li>
+        </ol>
+
+        <h3>App Feels Slow?</h3>
+        <ol>
+            <li>Clear browser cache and reload</li>
+            <li>Check available storage (Settings → Storage)</li>
+            <li>Restart browser if issues persist</li>
+            <li>Export data first if clearing storage</li>
+        </ol>
+
+        <div class="warning">
+            <h3>Lost Data?</h3>
+            <ol>
+                <li>Check export files in Downloads folder</li>
+                <li>Data stored locally - clearing browser data removes it</li>
+                <li>Enable reminders again after data loss</li>
+                <li>Regular exports prevent this</li>
+            </ol>
+        </div>
+
+        <h2>Privacy & Security</h2>
+        <ul>
+            <li><strong>No server uploads</strong> - everything stays on your device</li>
+            <li><strong>No tracking</strong> - we don't know who you are</li>
+            <li><strong>No analytics</strong> - your usage data isn't collected</li>
+            <li><strong>Browser storage only</strong> - under your complete control</li>
+        </ul>
+
+        <h2>PWA Features</h2>
+        <ul>
+            <li><strong>Install as app</strong> - add to home screen on mobile</li>
+            <li><strong>Offline capable</strong> - works without internet</li>
+            <li><strong>Native integration</strong> - notifications, icons, themes</li>
+            <li><strong>Automatic updates</strong> - latest version on refresh</li>
+        </ul>
+
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: #f7fafc; border-radius: 8px;">
+            <p><strong>Built with care by Rook - where plants and algorithms meet British reality.</strong></p>
+            <a href="root-juice.html" style="display: inline-block; margin-top: 1rem; padding: 12px 24px; background: #2f855a; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">Try Root Juice Now</a>
+        </div>
+    </div>
+</body>
+</html>
