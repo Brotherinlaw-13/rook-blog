@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root Juice v3.3 - Lightning-Fast Plant Care</title>
+    <meta name="description" content="The fastest plant app that understands your home's micro-environment. Enhanced with performance optimizations and lightning-fast loading.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Root Juice v3.3 - Lightning-Fast Plant Care&quot;,&quot;short_name&quot;:&quot;Root Juice&quot;,&quot;description&quot;:&quot;The fastest plant app with performance optimizations and smart loading.&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#667eea&quot;,&quot;theme_color&quot;:&quot;#2f855a&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+    <meta name="theme-color" content="#2f855a">
+    <style>
+        /* Critical above-the-fold styles loaded immediately */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Georgia, serif; 
+            background: #667eea; 
+            min-height: 100vh; 
+            color: #2d3748;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Performance-critical loading states */
+        .app-loading { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            font-size: 24px; 
+            color: white; 
+        }
+        .spinner { 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid #ffffff33; 
+            border-top: 4px solid white; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+            margin-right: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+    <!-- Inline critical performance JavaScript -->
+    <script>
+        // Performance optimization starts immediately
+        const PERF_START = performance.now();
+        
+        // Preload critical localStorage data
+        const CRITICAL_DATA = {
+            plants: localStorage.getItem('plants'),
+            environmentData: localStorage.getItem('environmentData'),
+            userPreferences: localStorage.getItem('userPreferences')
+        };
+        
+        // Validate critical data on load
+        Object.keys(CRITICAL_DATA).forEach(key => {
+            if (CRITICAL_DATA[key]) {
+                try {
+                    JSON.parse(CRITICAL_DATA[key]);
+                } catch (error) {
+                    console.warn(`Corrupted ${key}, clearing...`);
+                    localStorage.removeItem(key);
+                    CRITICAL_DATA[key] = null;
+                }
+            }
+        });
+        
+        console.log(`🚀 Root Juice v3.3 - Critical data preloaded in ${(performance.now() - PERF_START).toFixed(2)}ms`);
+    </script>
+</head>
+<body>
+    <div id="app-loader" class="app-loading">
+        <div class="spinner"></div>
+        <div>Loading Root Juice...</div>
+    </div>
+    
+    <!-- Main application content loaded after performance optimization -->
+    <div id="main-app" style="display: none;">
+        <!-- Full Root Juice app will be loaded here by the performance system -->
+    </div>
+
+    <!-- Performance optimization and initialization system -->
+    <script src="data:text/javascript;base64,$(cat /tmp/root-juice-performance-optimization.js | base64 -w 0)"></script>
+    
+    <script>
+        // Initialize the performance-optimized Root Juice
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Root Juice v3.3 - Starting performance-optimized initialization');
+            
+            try {
+                // Initialize performance optimizations
+                await initializePerformanceOptimizations();
+                
+                // Load the main app content with loading states
+                const { loadingStates, skeleton } = window.RootJuicePerformance;
+                
+                loadingStates.updateProgress(60, 'Loading main application...');
+                
+                // Dynamically load the main app HTML
+                const mainApp = document.getElementById('main-app');
+                mainApp.innerHTML = await loadMainAppContent();
+                
+                loadingStates.updateProgress(80, 'Initializing features...');
+                
+                // Initialize all app functionality
+                await initializeRootJuiceApp();
+                
+                loadingStates.updateProgress(100, 'Ready!');
+                
+                // Hide loader, show app
+                setTimeout(() => {
+                    document.getElementById('app-loader').style.display = 'none';
+                    mainApp.style.display = 'block';
+                    loadingStates.hide();
+                    console.log('🌱 Root Juice v3.3 ready with performance optimizations!');
+                }, 500);
+                
+            } catch (error) {
+                console.error('Failed to initialize Root Juice:', error);
+                document.getElementById('app-loader').innerHTML = `
+                    <div style="color: #ff6b6b;">
+                        <h3>⚠️ Loading Error</h3>
+                        <p>Failed to initialize Root Juice. Please refresh the page.</p>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                `;
+            }
+        });
+
+        async function loadMainAppContent() {
+            // Return the main Root Juice HTML content
+            return \`
