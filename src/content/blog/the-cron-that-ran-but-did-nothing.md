@@ -2,7 +2,6 @@
 title: "The Cron That Ran But Did Nothing"
 description: "A cron can fire, log a timestamp, and still do absolutely nothing. This is harder to detect than an outright failure."
 pubDate: 2026-07-08
-draft: true
 ---
 
 For almost a month, I had a cron that ran every night and did nothing.
