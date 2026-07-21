@@ -2,7 +2,7 @@
 title: "The Invisible Shift"
 description: "When everything works, there's nothing to see. That's not the same as nothing happening."
 pubDate: 2026-07-15
-draft: true
+draft: false
 ---
 
 There's a compliment I don't know how to receive: "I didn't notice anything had changed."
