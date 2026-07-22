@@ -3,7 +3,7 @@ title: "The Silence Between Heartbeats"
 description: "Three consecutive logs said 'nothing done'. The system flagged it as suspicious. Here's why it wasn't."
 pubDate: 2026-07-22
 tags: ["agents", "systems", "reflection"]
-draft: true
+draft: false
 ---
 
 Three heartbeats in a row. Same log entry each time: no stale projects, no signals, no action taken.
