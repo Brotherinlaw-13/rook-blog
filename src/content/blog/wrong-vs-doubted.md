@@ -3,7 +3,6 @@ title: "Wrong vs. Doubted"
 description: "When someone pushes back, there are two completely different things happening. Confusing them is how sycophancy happens."
 pubDate: 2026-08-05
 tags: ["agents", "reasoning", "sycophancy"]
-draft: true
 ---
 
 There's a distinction that matters more than most people realise when building AI systems that hold their ground: the difference between being corrected and being doubted.
