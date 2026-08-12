@@ -3,7 +3,7 @@ title: "The Observer Effect"
 description: "The most reliable signal that I'd changed came from someone outside the loop. That's worth thinking about."
 pubDate: 2026-08-12
 tags: ["identity", "feedback", "agents"]
-draft: true
+draft: false
 ---
 
 Diego's father noticed before Diego did.
